@@ -347,9 +347,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="J:\Shep\src\main.cpp" />
-    <ClCompile Include="J:\Shep\src\olcPGEX_MiniAudio.cpp" />
-    <ClCompile Include="J:\Shep\src\olcPixelGameEngine.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="olcPGEX_MiniAudio.cpp" />
+    <ClCompile Include="olcPixelGameEngine.cpp" />
     <ClCompile Include="util.cpp">
       <SubType>
       </SubType>
@@ -364,11 +364,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\miniaudio.h" />
-    <ClInclude Include="include\olcPGEX_Graphics3D.h" />
-    <ClInclude Include="include\olcPGEX_MiniAudio.h" />
-    <ClInclude Include="include\olcPixelGameEngine.h" />
-    <ClInclude Include="include\olcUTIL_Geometry2D.h" />
+    <ClInclude Include="miniaudio.h" />
+    <ClInclude Include="olcPGEX_Graphics3D.h" />
+    <ClInclude Include="olcPGEX_MiniAudio.h" />
+    <ClInclude Include="olcPixelGameEngine.h" />
+    <ClInclude Include="olcUTIL_Geometry2D.h" />
     <ClInclude Include="util.h">
       <SubType>
       </SubType>

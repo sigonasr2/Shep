@@ -16,14 +16,14 @@ option(HAS_TERMINAL "Show a terminal window for STDOUT/STDERR" ON)
 #
 #   - the place where your C/C++ source files are located
 #
-set(C_CXX_SOURCES_DIR "src")
+set(C_CXX_SOURCES_DIR ".")
 
 #
 # C_CXX_HEADERS_DIR
 #
 #   - the place where your C/C++ header files are located
 #
-set(C_CXX_HEADERS_DIR "include")
+set(C_CXX_HEADERS_DIR ".")"
 
 #
 # ASSETS_DIR
