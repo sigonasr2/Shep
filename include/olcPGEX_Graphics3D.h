@@ -1053,7 +1053,6 @@ namespace olc
 
 			if (flags & RENDER_WIRE)
 			{
-				DrawTriangleWire(triProjected, olc::RED);
 			}
 			else
 			{

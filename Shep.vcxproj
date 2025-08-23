@@ -88,6 +88,9 @@
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
     <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">J:/Shep/bin</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>J:\Shep;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>J:\Shep\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -347,6 +350,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="J:\Shep\src\main.cpp" />
     <ClCompile Include="J:\Shep\src\olcPGEX_MiniAudio.cpp" />
     <ClCompile Include="J:\Shep\src\olcPixelGameEngine.cpp" />
+    <ClCompile Include="util.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="J:\Shep\ZERO_CHECK.vcxproj">
@@ -364,10 +371,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\miniaudio.h" />
+    <ClInclude Include="include\olcPGEX_Graphics3D.h" />
     <ClInclude Include="include\olcPGEX_MiniAudio.h" />
     <ClInclude Include="include\olcPixelGameEngine.h" />
     <ClInclude Include="include\olcUTIL_Geometry2D.h" />
-    <ClInclude Include="olcPGEXGraphics3D.h">
+    <ClInclude Include="util.h">
       <SubType>
       </SubType>
     </ClInclude>

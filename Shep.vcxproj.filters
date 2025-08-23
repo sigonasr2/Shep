@@ -10,6 +10,9 @@
     <ClCompile Include="J:\Shep\src\olcPixelGameEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="J:\Shep\CMakeLists.txt" />
@@ -32,10 +35,13 @@
     <ClInclude Include="include\olcPixelGameEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="olcPGEXGraphics3D.h">
+    <ClInclude Include="include\olcUTIL_Geometry2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\olcUTIL_Geometry2D.h">
+    <ClInclude Include="include\olcPGEX_Graphics3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

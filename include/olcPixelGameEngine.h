@@ -1,4 +1,3 @@
-#define OLC_IGNORE_VEC2D
 #include "olcUTIL_Geometry2D.h"
 #pragma region license_and_help
 /*
@@ -668,7 +667,7 @@ namespace olc
 
 
 
-
+#define OLC_IGNORE_VEC2D
 	// O------------------------------------------------------------------------------O
 	// | olc::vX2d - A generic 2D vector type                                         |
 	// O------------------------------------------------------------------------------O
