@@ -1,0 +1,37 @@
+Exploration RPG Puzzle Game
+
+Highly derivative of Pokemon
+
+Shapes "Pokemon" named Shep
+
+Run around obtaining various Shep of varying shapes/sizes
+
+Portals/Teleporters/Caverns/Walls
+Engravings - Combination of multiple shapes "Silhouette"
+Fill in the engraving in order to unlock a new area
+
+
+Try and make the shapes a bit flexible
+
+
+
+
+Pokemon Heartgold/Soulsilver camera system
+HamsterGame::Apply3DTransform (virtual function overwritten from a PGE derived class)
+
+
+Game Rendering Engine (2 Days)
+	Night/Day Cycle
+Tiled Setup, Get Graphics, Movement, Collisions, Doors (1 Day)
+Shep (3/4 Core Types, 16 distinct shapes), Items (1 Day)
+	Catching
+	Stats
+	Shep Encyclopedia (Maybe)
+
+Battle Mechanics, Item Mechanics (1 Day)
+Maps (4 Locations, 2 Towns) (1 Day)
+	Encounter Zones
+Puzzle Aspect (Fitting shapes into engravings) (1 Day)
+Story, Dialog System, Shape Evolutions (1 Day)
+Playtesting / Tweaks / Bugfixes
+	Multiple Puzzle Variations

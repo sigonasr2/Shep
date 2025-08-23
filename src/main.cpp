@@ -10,9 +10,12 @@ public:
 	}
 
 public:
+
+	Renderable space;
+
 	bool OnUserCreate() override
 	{
-		// Called once at the start, so create things here
+		space.Load("assets/gfx/space.png");
 		return true;
 	}
 
@@ -22,7 +25,12 @@ public:
 		for (int x = 0; x < ScreenWidth(); x++)
 			for (int y = 0; y < ScreenHeight(); y++)
 				Draw(x, y, olc::Pixel(rand() % 256, rand() % 256, rand() % 256));
+
+		DrawDecal({},space.Decal(),{1.f,1.f},WHITE,olc::GFX3DTransform::TRANSFORM_REQUIRED);
 		return true;
+	}
+	virtual void Apply3DTransform(std::vector<DecalInstance>&decals)override{
+		decals.clear();
 	}
 };
 

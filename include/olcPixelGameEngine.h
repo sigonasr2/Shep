@@ -1,3 +1,5 @@
+#define OLC_IGNORE_VEC2D
+#include "olcUTIL_Geometry2D.h"
 #pragma region license_and_help
 /*
 	olcPixelGameEngine.h
@@ -372,6 +374,8 @@ int main()
 
 */
 #pragma endregion
+
+#include "olcUTIL_Geometry2D.h"
 
 #ifndef OLC_PGE_DEF
 #define OLC_PGE_DEF
@@ -862,6 +866,12 @@ namespace olc
 		LIST
 	};
 
+	enum class GFX3DTransform
+	{
+		TRANSFORM_REQUIRED,
+		NO_TRANSFORM
+	};
+
 	// O------------------------------------------------------------------------------O
 	// | olc::Renderable - Convenience class to keep a sprite and decal together      |
 	// O------------------------------------------------------------------------------O
@@ -898,6 +908,7 @@ namespace olc
 		olc::DecalStructure structure = olc::DecalStructure::FAN;
 		uint32_t points = 0;
 		bool depth = false;
+		GFX3DTransform transform{GFX3DTransform::NO_TRANSFORM};
 	};
 
 	struct LayerDesc
@@ -909,6 +920,7 @@ namespace olc
 		olc::Renderable pDrawTarget;
 		uint32_t nResID = 0;
 		std::vector<DecalInstance> vecDecalInstance;
+		std::vector<DecalInstance> vecForegroundDecalInstance;
 		olc::Pixel tint = olc::WHITE;
 		std::function<void()> funcHook = nullptr;
 	};
@@ -974,6 +986,7 @@ namespace olc
 	public: // User Override Interfaces
 		// Called once on application startup, use to load your resources
 		virtual bool OnUserCreate();
+		virtual void Apply3DTransform(std::vector<DecalInstance>&decals);
 		// Called every frame, and provides you with a time per frame value
 		virtual bool OnUserUpdate(float fElapsedTime);
 		// Called once on application termination, so you can be one clean coder
@@ -981,6 +994,7 @@ namespace olc
 
 		// Called when a text entry is confirmed with "enter" key
 		virtual void OnTextEntryComplete(const std::string& sText);
+		virtual void OnTextEntryCancelled(const std::string& sText);
 		// Called when a console command is executed
 		virtual bool OnConsoleCommand(const std::string& sCommand);
 
@@ -1025,6 +1039,7 @@ namespace olc
 		uint32_t GetFPS() const;
 		// Gets last update of elapsed time
 		float GetElapsedTime() const;
+		void SetElapsedTime(const float fElapsedTime);
 		// Gets Actual Window size
 		const olc::vi2d& GetWindowSize() const;
 		// Gets pixel scale
@@ -1047,6 +1062,8 @@ namespace olc
 		void SetLayerScale(uint8_t layer, float x, float y);
 		void SetLayerTint(uint8_t layer, const olc::Pixel& tint);
 		void SetLayerCustomRenderFunction(uint8_t layer, std::function<void()> f);
+
+		void SetZ(const float z);
 
 		std::vector<LayerDesc>& GetLayers();
 		uint32_t CreateLayer();
@@ -1091,6 +1108,8 @@ namespace olc
 		void FillTriangle(const olc::vi2d& pos1, const olc::vi2d& pos2, const olc::vi2d& pos3, Pixel p = olc::WHITE);
 		// Fill a textured and coloured triangle
 		void FillTexturedTriangle(std::vector<olc::vf2d> vPoints, std::vector<olc::vf2d> vTex, std::vector<olc::Pixel> vColour, olc::Sprite* sprTex);
+		void FillTexturedTriangleDecal(Decal*decal,const olc::vf2d& p0, const olc::vf2d& p1, const olc::vf2d& p2, const olc::vf2d& uv0, const olc::vf2d& uv1, const olc::vf2d& uv2, const float& w0, const float& w1, const float& w2, const olc::Pixel col0, const olc::Pixel col1, const olc::Pixel col2,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void FillTexturedTriangleDecal(Decal*decal,const olc::vf2d& p0, const olc::vf2d& p1, const olc::vf2d& p2,const float& z0, const float& z1, const float& z2, const olc::vf2d& uv0, const olc::vf2d& uv1, const olc::vf2d& uv2, const float& w0, const float& w1, const float& w2, const olc::Pixel col0, const olc::Pixel col1, const olc::Pixel col2,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 		void FillTexturedPolygon(const std::vector<olc::vf2d>& vPoints, const std::vector<olc::vf2d>& vTex, const std::vector<olc::Pixel>& vColour, olc::Sprite* sprTex, olc::DecalStructure structure = olc::DecalStructure::LIST);
 		// Draws an entire sprite at location (x,y)
 		void DrawSprite(int32_t x, int32_t y, Sprite* sprite, uint32_t scale = 1, uint8_t flip = olc::Sprite::NONE);
@@ -1112,42 +1131,49 @@ namespace olc
 		void SetDecalMode(const olc::DecalMode& mode);
 		void SetDecalStructure(const olc::DecalStructure& structure);
 		// Draws a whole decal, with optional scale and tinting
-		void DrawDecal(const olc::vf2d& pos, olc::Decal* decal, const olc::vf2d& scale = { 1.0f,1.0f }, const olc::Pixel& tint = olc::WHITE);
+		void DrawDecal(const olc::vf2d& pos, olc::Decal* decal, const olc::vf2d& scale = { 1.0f,1.0f }, const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 		// Draws a region of a decal, with optional scale and tinting
-		void DrawPartialDecal(const olc::vf2d& pos, olc::Decal* decal, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::vf2d& scale = { 1.0f,1.0f }, const olc::Pixel& tint = olc::WHITE);
-		void DrawPartialDecal(const olc::vf2d& pos, const olc::vf2d& size, olc::Decal* decal, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint = olc::WHITE);
+		void DrawPartialDecal(const olc::vf2d& pos, olc::Decal* decal, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::vf2d& scale = { 1.0f,1.0f }, const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawPartialDecal(const olc::vf2d& pos, const olc::vf2d& size, olc::Decal* decal, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 		// Draws fully user controlled 4 vertices, pos(pixels), uv(pixels), colours
-		void DrawExplicitDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::vf2d* uv, const olc::Pixel* col, uint32_t elements = 4);
+		void DrawExplicitDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::vf2d* uv, const olc::Pixel* col, uint32_t elements = 4,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawExplicitDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::vf2d* uv, const olc::Pixel* col, const float* w, uint32_t elements,const GFX3DTransform transform);
+		void DrawExplicitDecal(olc::Decal* decal, const olc::vf2d* pos,const float* z, const olc::vf2d* uv, const olc::Pixel* col, const float* w, uint32_t elements,const GFX3DTransform transform);
 		// Draws a decal with 4 arbitrary points, warping the texture to look "correct"
-		void DrawWarpedDecal(olc::Decal* decal, const olc::vf2d(&pos)[4], const olc::Pixel& tint = olc::WHITE);
-		void DrawWarpedDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::Pixel& tint = olc::WHITE);
-		void DrawWarpedDecal(olc::Decal* decal, const std::array<olc::vf2d, 4>& pos, const olc::Pixel& tint = olc::WHITE);
+		void DrawWarpedDecal(olc::Decal* decal, const olc::vf2d(&pos)[4], const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawWarpedDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawWarpedDecal(olc::Decal* decal, const std::array<olc::vf2d, 4>& pos, const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 		// As above, but you can specify a region of a decal source sprite
-		void DrawPartialWarpedDecal(olc::Decal* decal, const olc::vf2d(&pos)[4], const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint = olc::WHITE);
-		void DrawPartialWarpedDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint = olc::WHITE);
-		void DrawPartialWarpedDecal(olc::Decal* decal, const std::array<olc::vf2d, 4>& pos, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint = olc::WHITE);
+		void DrawPartialWarpedDecal(olc::Decal* decal, const olc::vf2d(&pos)[4], const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawPartialWarpedDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawPartialWarpedDecal(olc::Decal* decal, const std::array<olc::vf2d, 4>& pos, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 		// Draws a decal rotated to specified angle, wit point of rotation offset
-		void DrawRotatedDecal(const olc::vf2d& pos, olc::Decal* decal, const float fAngle, const olc::vf2d& center = { 0.0f, 0.0f }, const olc::vf2d& scale = { 1.0f,1.0f }, const olc::Pixel& tint = olc::WHITE);
-		void DrawPartialRotatedDecal(const olc::vf2d& pos, olc::Decal* decal, const float fAngle, const olc::vf2d& center, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::vf2d& scale = { 1.0f, 1.0f }, const olc::Pixel& tint = olc::WHITE);
+		void DrawRotatedDecal(const olc::vf2d& pos, olc::Decal* decal, const float fAngle, const olc::vf2d& center = { 0.0f, 0.0f }, const olc::vf2d& scale = { 1.0f,1.0f }, const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawPartialRotatedDecal(const olc::vf2d& pos, olc::Decal* decal, const float fAngle, const olc::vf2d& center, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::vf2d& scale = { 1.0f, 1.0f }, const olc::Pixel& tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 		// Draws a multiline string as a decal, with tiniting and scaling
-		void DrawStringDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col = olc::WHITE, const olc::vf2d& scale = { 1.0f, 1.0f });
-		void DrawStringPropDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col = olc::WHITE, const olc::vf2d& scale = { 1.0f, 1.0f });
+		void DrawStringDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col = olc::WHITE, const olc::vf2d& scale = { 1.0f, 1.0f }, const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawStringPropDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col = olc::WHITE, const olc::vf2d& scale = { 1.0f, 1.0f }, const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawShadowStringDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col = olc::WHITE, const Pixel shadowCol = olc::BLACK, const olc::vf2d& scale = { 1.0f, 1.0f }, const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawShadowStringPropDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col = olc::WHITE, const Pixel shadowCol = olc::BLACK, const olc::vf2d& scale = { 1.0f, 1.0f }, const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 		// Draws a single shaded filled rectangle as a decal
-		void DrawRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel col = olc::WHITE);
-		void FillRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel col = olc::WHITE);
+		void DrawRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel col = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void FillRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel col = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 		// Draws a corner shaded rectangle as a decal
-		void GradientFillRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel colTL, const olc::Pixel colBL, const olc::Pixel colBR, const olc::Pixel colTR);
+		void GradientFillRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel colTL, const olc::Pixel colBL, const olc::Pixel colBR, const olc::Pixel colTR,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void FillTriangleDecal(const olc::vf2d& p0, const olc::vf2d& p1, const olc::vf2d& p2, const olc::Pixel col,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 		// Draws an arbitrary convex textured polygon using GPU
-		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const olc::Pixel tint = olc::WHITE);
-		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<float>& depth, const std::vector<olc::vf2d>& uv, const olc::Pixel tint = olc::WHITE);
-		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel>& tint);
-		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel>& colours, const olc::Pixel tint);
-		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<float>& depth, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel>& colours, const olc::Pixel tint);
+		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const olc::Pixel tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<float>& depth, const std::vector<olc::vf2d>& uv, const olc::Pixel tint = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel>& tint,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel>& colours, const olc::Pixel tint,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<float>& depth, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel>& colours, const olc::Pixel tint,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 
 		// Draws a line in Decal Space
-		void DrawLineDecal(const olc::vf2d& pos1, const olc::vf2d& pos2, Pixel p = olc::WHITE);
-		void DrawRotatedStringDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center = { 0.0f, 0.0f }, const olc::Pixel col = olc::WHITE, const olc::vf2d& scale = { 1.0f, 1.0f });
-		void DrawRotatedStringPropDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center = { 0.0f, 0.0f }, const olc::Pixel col = olc::WHITE, const olc::vf2d& scale = { 1.0f, 1.0f });
+		void DrawLineDecal(const olc::vf2d& pos1, const olc::vf2d& pos2, Pixel p = olc::WHITE,const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawRotatedStringDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center = { 0.0f, 0.0f }, const olc::Pixel col = olc::WHITE, const olc::vf2d& scale = { 1.0f, 1.0f },const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawRotatedStringPropDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center = { 0.0f, 0.0f }, const olc::Pixel col = olc::WHITE, const olc::vf2d& scale = { 1.0f, 1.0f },const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawShadowRotatedStringDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center = { 0.0f, 0.0f }, const olc::Pixel col = olc::WHITE, const Pixel shadowCol = olc::BLACK, const olc::vf2d& scale = { 1.0f, 1.0f },const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
+		void DrawShadowRotatedStringPropDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center = { 0.0f, 0.0f }, const olc::Pixel col = olc::WHITE, const Pixel shadowCol = olc::BLACK, const olc::vf2d& scale = { 1.0f, 1.0f },const GFX3DTransform transform=GFX3DTransform::NO_TRANSFORM);
 		// Clears entire draw target to Pixel
 		void Clear(Pixel p);
 		// Clears the rendering back buffer
@@ -1238,12 +1264,14 @@ namespace olc
 		int			nFrameCount = 0;		
 		bool bSuspendTextureTransfer = false;
 		Renderable  fontRenderable;
+		Renderable  shadowFontRenderable;
 		std::vector<LayerDesc> vLayers;
 		uint8_t		nTargetLayer = 0;
 		uint32_t	nLastFPS = 0;
 		bool        bPixelCohesion = false;
 		DecalMode   nDecalMode = DecalMode::NORMAL;
 		DecalStructure nDecalStructure = DecalStructure::FAN;
+		float z = 0;
 		std::function<olc::Pixel(const int x, const int y, const olc::Pixel&, const olc::Pixel&)> funcPixelMode;
 		std::chrono::time_point<std::chrono::system_clock> m_tp1, m_tp2;
 		std::vector<olc::vi2d> vFontSpacing;
@@ -2129,6 +2157,8 @@ namespace olc
 
 	float PixelGameEngine::GetElapsedTime() const
 	{ return fLastElapsed; }
+	void PixelGameEngine::SetElapsedTime(const float fElapsedTime)
+	{ fLastElapsed=fElapsedTime; }
 
 	const olc::vi2d& PixelGameEngine::GetWindowSize() const
 	{ return vWindowSize; }
@@ -2830,7 +2860,7 @@ namespace olc
 	void PixelGameEngine::SetDecalStructure(const olc::DecalStructure& structure)
 	{ nDecalStructure = structure; }
 
-	void PixelGameEngine::DrawPartialDecal(const olc::vf2d& pos, olc::Decal* decal, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::vf2d& scale, const olc::Pixel& tint)
+	void PixelGameEngine::DrawPartialDecal(const olc::vf2d& pos, olc::Decal* decal, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::vf2d& scale, const olc::Pixel& tint,const GFX3DTransform transform)
 	{
 		olc::vf2d vScreenSpacePos =
 		{
@@ -2854,16 +2884,19 @@ namespace olc
 		di.decal = decal;
 		di.tint = { tint, tint, tint, tint };
 		di.pos = { { vQuantisedPos.x, vQuantisedPos.y }, { vQuantisedPos.x, vQuantisedDim.y }, { vQuantisedDim.x, vQuantisedDim.y }, { vQuantisedDim.x, vQuantisedPos.y } };
-		olc::vf2d uvtl = (source_pos + olc::vf2d(0.0001f, 0.0001f)) * decal->vUVScale;
-		olc::vf2d uvbr = (source_pos + source_size - olc::vf2d(0.0001f, 0.0001f)) * decal->vUVScale;
+		olc::vf2d uvtl = (source_pos + olc::vf2d(0.01f, 0.01f)) * decal->vUVScale;
+		olc::vf2d uvbr = uvtl + ((source_size - olc::vf2d(0.02f, 0.02f)) * decal->vUVScale);
 		di.uv = { { uvtl.x, uvtl.y }, { uvtl.x, uvbr.y }, { uvbr.x, uvbr.y }, { uvbr.x, uvtl.y } };
 		di.w = { 1,1,1,1 };
+		di.z={z,z,z,z};
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		di.transform=transform;
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
-	void PixelGameEngine::DrawPartialDecal(const olc::vf2d& pos, const olc::vf2d& size, olc::Decal* decal, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint)
+	void PixelGameEngine::DrawPartialDecal(const olc::vf2d& pos, const olc::vf2d& size, olc::Decal* decal, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint,const GFX3DTransform transform)
 	{
 		olc::vf2d vScreenSpacePos =
 		{
@@ -2882,17 +2915,20 @@ namespace olc
 		di.decal = decal;
 		di.tint = { tint, tint, tint, tint };
 		di.pos = { { vScreenSpacePos.x, vScreenSpacePos.y }, { vScreenSpacePos.x, vScreenSpaceDim.y }, { vScreenSpaceDim.x, vScreenSpaceDim.y }, { vScreenSpaceDim.x, vScreenSpacePos.y } };
-		olc::vf2d uvtl = (source_pos) * decal->vUVScale;
-		olc::vf2d uvbr = uvtl + ((source_size) * decal->vUVScale);
+		olc::vf2d uvtl = (source_pos + olc::vf2d(0.02f, 0.02f)) * decal->vUVScale;
+		olc::vf2d uvbr = (source_pos + source_size - olc::vf2d(0.03f, 0.03f)) * decal->vUVScale;
 		di.uv = { { uvtl.x, uvtl.y }, { uvtl.x, uvbr.y }, { uvbr.x, uvbr.y }, { uvbr.x, uvtl.y } };
 		di.w = { 1,1,1,1 };
+		di.z={z,z,z,z};
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		di.transform=transform;
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
 
-	void PixelGameEngine::DrawDecal(const olc::vf2d& pos, olc::Decal* decal, const olc::vf2d& scale, const olc::Pixel& tint)
+	void PixelGameEngine::DrawDecal(const olc::vf2d& pos, olc::Decal* decal, const olc::vf2d& scale, const olc::Pixel& tint,const GFX3DTransform transform)
 	{
 		olc::vf2d vScreenSpacePos =
 		{
@@ -2915,31 +2951,55 @@ namespace olc
 		di.w = { 1, 1, 1, 1 };
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		di.transform=transform;
+		di.z = {z,z,z,z};
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
-	void PixelGameEngine::DrawExplicitDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::vf2d* uv, const olc::Pixel* col, uint32_t elements)
+	void PixelGameEngine::DrawExplicitDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::vf2d* uv, const olc::Pixel* col, uint32_t elements,const GFX3DTransform transform)
+	{
+		std::vector<float>ws;
+		ws.resize(elements,1);
+		DrawExplicitDecal(decal,pos,uv,col,ws.data(),elements,transform);
+	}
+
+	void PixelGameEngine::DrawExplicitDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::vf2d* uv, const olc::Pixel* col, const float* w, uint32_t elements,const GFX3DTransform transform)
+	{
+		std::vector<float>ws;
+		ws.resize(elements,1);
+		std::vector<float>z;
+		z.resize(elements,this->z);
+		DrawExplicitDecal(decal,pos,z.data(),uv,col,ws.data(),elements,transform);
+	}
+
+	void PixelGameEngine::DrawExplicitDecal(olc::Decal* decal, const olc::vf2d* pos, const float* z, const olc::vf2d* uv, const olc::Pixel* col, const float* w, uint32_t elements,const GFX3DTransform transform)
 	{
 		DecalInstance di;
 		di.decal = decal;
 		di.pos.resize(elements);
 		di.uv.resize(elements);
 		di.w.resize(elements);
+		di.z.resize(elements);
 		di.tint.resize(elements);
 		di.points = elements;
+		di.depth=true;
 		for (uint32_t i = 0; i < elements; i++)
 		{
 			di.pos[i] = { (pos[i].x * vInvScreenSize.x) * 2.0f - 1.0f, ((pos[i].y * vInvScreenSize.y) * 2.0f - 1.0f) * -1.0f };
 			di.uv[i] = uv[i];
 			di.tint[i] = col[i];
-			di.w[i] = 1.0f;
+			di.w[i] = w[i];
+			di.z[i] = z[i];
 		}
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		di.transform=transform;
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
-	void PixelGameEngine::DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const olc::Pixel tint)
+	void PixelGameEngine::DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const olc::Pixel tint,const GFX3DTransform transform)
 	{
 		DecalInstance di;
 		di.decal = decal;
@@ -2947,6 +3007,7 @@ namespace olc
 		di.pos.resize(di.points);
 		di.uv.resize(di.points);
 		di.w.resize(di.points);
+		di.z.resize(di.points,z);
 		di.tint.resize(di.points);
 		for (uint32_t i = 0; i < di.points; i++)
 		{
@@ -2957,10 +3018,12 @@ namespace olc
 		}
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		di.transform=transform;
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
-	void PixelGameEngine::DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel> &tint)
+	void PixelGameEngine::DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel> &tint,const GFX3DTransform transform)
 	{
 		DecalInstance di;
 		di.decal = decal;
@@ -2968,6 +3031,7 @@ namespace olc
 		di.pos.resize(di.points);
 		di.uv.resize(di.points);
 		di.w.resize(di.points);
+		di.z.resize(di.points,z);
 		di.tint.resize(di.points);
 		for (uint32_t i = 0; i < di.points; i++)
 		{
@@ -2978,10 +3042,12 @@ namespace olc
 		}
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		di.transform=transform;
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
-	void PixelGameEngine::DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel>& colours, const olc::Pixel tint)
+	void PixelGameEngine::DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel>& colours, const olc::Pixel tint,const GFX3DTransform transform)
 	{
 		std::vector<olc::Pixel> newColours(colours.size(), olc::WHITE);
 		std::transform(colours.begin(), colours.end(), newColours.begin(),
@@ -2990,7 +3056,7 @@ namespace olc
 	}
 
 
-	void PixelGameEngine::DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<float>& depth, const std::vector<olc::vf2d>& uv, const olc::Pixel tint)
+	void PixelGameEngine::DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<float>& depth, const std::vector<olc::vf2d>& uv, const olc::Pixel tint,const GFX3DTransform transform)
 	{
 		DecalInstance di;
 		di.decal = decal;
@@ -2998,6 +3064,7 @@ namespace olc
 		di.pos.resize(di.points);
 		di.uv.resize(di.points);
 		di.w.resize(di.points);
+		di.z.resize(di.points,z);
 		di.tint.resize(di.points);
 		for (uint32_t i = 0; i < di.points; i++)
 		{
@@ -3008,10 +3075,12 @@ namespace olc
 		}
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		di.transform=transform;
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
-	void PixelGameEngine::DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<float>& depth, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel>& colours, const olc::Pixel tint)
+	void PixelGameEngine::DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<float>& depth, const std::vector<olc::vf2d>& uv, const std::vector<olc::Pixel>& colours, const olc::Pixel tint,const GFX3DTransform transform)
 	{
 		DecalInstance di;
 		di.decal = decal;
@@ -3019,6 +3088,7 @@ namespace olc
 		di.pos.resize(di.points);
 		di.uv.resize(di.points);
 		di.w.resize(di.points);
+		di.z.resize(di.points,z);
 		di.tint.resize(di.points);
 		for (uint32_t i = 0; i < di.points; i++)
 		{
@@ -3029,8 +3099,11 @@ namespace olc
 		}
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		di.transform=transform;
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
+
 
 #ifdef OLC_ENABLE_EXPERIMENTAL
 	// Lightweight 3D
@@ -3055,7 +3128,8 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = DecalStructure::LIST;
 		di.depth = true;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
 	void PixelGameEngine::LW3D_DrawWarpedDecal(olc::Decal* decal, const std::vector<std::array<float, 3>>& pos, const olc::Pixel& tint)
@@ -3097,16 +3171,17 @@ namespace olc
 			di.mode = nDecalMode;
 			di.structure = nDecalStructure;
 			di.depth = true;
-			vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+			if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+			else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 		}
 	}
 #endif
 
-	void PixelGameEngine::DrawLineDecal(const olc::vf2d& pos1, const olc::vf2d& pos2, Pixel p)
+	void PixelGameEngine::DrawLineDecal(const olc::vf2d& pos1, const olc::vf2d& pos2, Pixel p,const GFX3DTransform transform)
 	{
 		auto m = nDecalMode;
 		nDecalMode = olc::DecalMode::WIREFRAME;
-		DrawPolygonDecal(nullptr, { pos1, pos2 }, { {0, 0}, {0,0} }, p);
+		DrawPolygonDecal(nullptr, { pos1, pos2 }, { {0, 0}, {0,0} }, p,transform);
 		nDecalMode = m;
 
 		/*DecalInstance di;
@@ -3126,10 +3201,10 @@ namespace olc
 		di.w[1] = 1.0f;
 		di.mode = olc::DecalMode::WIREFRAME;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);*/
+		vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);*/
 	}
 
-	void PixelGameEngine::DrawRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel col)
+	void PixelGameEngine::DrawRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel col,const GFX3DTransform transform)
 	{
 		auto m = nDecalMode;
 		SetDecalMode(olc::DecalMode::WIREFRAME);
@@ -3137,35 +3212,62 @@ namespace olc
 		std::array<olc::vf2d, 4> points = { { {pos}, {pos.x, pos.y + vNewSize.y}, {pos + vNewSize}, {pos.x + vNewSize.x, pos.y} } };
 		std::array<olc::vf2d, 4> uvs = { {{0,0},{0,0},{0,0},{0,0}} };
 		std::array<olc::Pixel, 4> cols = { {col, col, col, col} };
-		DrawExplicitDecal(nullptr, points.data(), uvs.data(), cols.data(), 4);
+		DrawExplicitDecal(nullptr, points.data(), uvs.data(), cols.data(), 4,transform);
 		SetDecalMode(m);
-
 	}
 
-	void PixelGameEngine::FillRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel col)
+	void PixelGameEngine::FillRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel col,const GFX3DTransform transform)
 	{
 		olc::vf2d vNewSize = size;// (size - olc::vf2d(0.375f, 0.375f)).ceil();
 		std::array<olc::vf2d, 4> points = { { {pos}, {pos.x, pos.y + vNewSize.y}, {pos + vNewSize}, {pos.x + vNewSize.x, pos.y} } };
 		std::array<olc::vf2d, 4> uvs = { {{0,0},{0,0},{0,0},{0,0}} };
 		std::array<olc::Pixel, 4> cols = { {col, col, col, col} };
-		DrawExplicitDecal(nullptr, points.data(), uvs.data(), cols.data(), 4);
+		DrawExplicitDecal(nullptr, points.data(), uvs.data(), cols.data(), 4,transform);
 	}
 
-	void PixelGameEngine::GradientFillRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel colTL, const olc::Pixel colBL, const olc::Pixel colBR, const olc::Pixel colTR)
+	void PixelGameEngine::GradientFillRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel colTL, const olc::Pixel colBL, const olc::Pixel colBR, const olc::Pixel colTR,const GFX3DTransform transform)
 	{
 		std::array<olc::vf2d, 4> points = { { {pos}, {pos.x, pos.y + size.y}, {pos + size}, {pos.x + size.x, pos.y} } };
 		std::array<olc::vf2d, 4> uvs = { {{0,0},{0,0},{0,0},{0,0}} };
 		std::array<olc::Pixel, 4> cols = { {colTL, colBL, colBR, colTR} };
-		DrawExplicitDecal(nullptr, points.data(), uvs.data(), cols.data(), 4);
+		DrawExplicitDecal(nullptr, points.data(), uvs.data(), cols.data(), 4,transform);
 	}
 
-	void PixelGameEngine::DrawRotatedDecal(const olc::vf2d& pos, olc::Decal* decal, const float fAngle, const olc::vf2d& center, const olc::vf2d& scale, const olc::Pixel& tint)
+	void PixelGameEngine::FillTriangleDecal(const olc::vf2d& p0, const olc::vf2d& p1, const olc::vf2d& p2, const olc::Pixel col,const GFX3DTransform transform)
+	{		
+		std::array<olc::vf2d, 4> points = { { p0, p1, p2 } };
+		std::array<olc::vf2d, 4> uvs = { {{0,0},{0,0},{0,0}} };
+		std::array<olc::Pixel, 4> cols = { {col, col, col} };
+		DrawExplicitDecal(nullptr, points.data(), uvs.data(), cols.data(), 3,transform);
+	}
+
+	void PixelGameEngine::FillTexturedTriangleDecal(Decal*decal,const olc::vf2d& p0, const olc::vf2d& p1, const olc::vf2d& p2, const olc::vf2d& uv0, const olc::vf2d& uv1, const olc::vf2d& uv2, const float& w0, const float& w1, const float& w2, const olc::Pixel col0, const olc::Pixel col1, const olc::Pixel col2,const GFX3DTransform transform)
+	{		
+		std::array<olc::vf2d, 4> points = { { p0, p1, p2 } };
+		std::array<olc::vf2d, 4> uvs = { {uv0,uv1,uv2} };
+		std::array<olc::Pixel, 4> cols = { {col0, col1, col2} };
+		std::array<float, 4> ws = { {w0,w1,w2} };
+		DrawExplicitDecal(decal, points.data(), uvs.data(), cols.data(), ws.data(),3,transform);
+	}
+
+	void PixelGameEngine::FillTexturedTriangleDecal(Decal*decal,const olc::vf2d& p0, const olc::vf2d& p1, const olc::vf2d& p2,const float& z0, const float& z1, const float& z2, const olc::vf2d& uv0, const olc::vf2d& uv1, const olc::vf2d& uv2, const float& w0, const float& w1, const float& w2, const olc::Pixel col0, const olc::Pixel col1, const olc::Pixel col2,const GFX3DTransform transform)
+	{		
+		std::array<olc::vf2d, 4> points = { { p0, p1, p2 } };
+		std::array<olc::vf2d, 4> uvs = { {uv0,uv1,uv2} };
+		std::array<olc::Pixel, 4> cols = { {col0, col1, col2} };
+		std::array<float, 4> ws = { {w0,w1,w2} };
+		std::array<float, 4> z = { {z0,z1,z2} };
+		DrawExplicitDecal(decal, points.data(), z.data(), uvs.data(), cols.data(), ws.data(),3,transform);
+	}
+
+	void PixelGameEngine::DrawRotatedDecal(const olc::vf2d& pos, olc::Decal* decal, const float fAngle, const olc::vf2d& center, const olc::vf2d& scale, const olc::Pixel& tint,const GFX3DTransform transform)
 	{
 		DecalInstance di;
 		di.decal = decal;
 		di.pos.resize(4);
 		di.uv = { { 0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f} };
 		di.w = { 1, 1, 1, 1 };
+		di.z={z,z,z,z};
 		di.tint = { tint, tint, tint, tint };
 		di.points = 4;
 		di.pos[0] = (olc::vf2d(0.0f, 0.0f) - center) * scale;
@@ -3182,17 +3284,20 @@ namespace olc
 		}
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		di.transform=transform;
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
 
-	void PixelGameEngine::DrawPartialRotatedDecal(const olc::vf2d& pos, olc::Decal* decal, const float fAngle, const olc::vf2d& center, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::vf2d& scale, const olc::Pixel& tint)
+	void PixelGameEngine::DrawPartialRotatedDecal(const olc::vf2d& pos, olc::Decal* decal, const float fAngle, const olc::vf2d& center, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::vf2d& scale, const olc::Pixel& tint,const GFX3DTransform transform)
 	{
 		DecalInstance di;
 		di.decal = decal;
-		di.points = 4;
+		di.points = 4; 
 		di.tint = { tint, tint, tint, tint };
 		di.w = { 1, 1, 1, 1 };
+		di.z={z,z,z,z};
 		di.pos.resize(4);
 		di.pos[0] = (olc::vf2d(0.0f, 0.0f) - center) * scale;
 		di.pos[1] = (olc::vf2d(0.0f, source_size.y) - center) * scale;
@@ -3211,16 +3316,19 @@ namespace olc
 		di.uv = { { uvtl.x, uvtl.y }, { uvtl.x, uvbr.y }, { uvbr.x, uvbr.y }, { uvbr.x, uvtl.y } };
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
-		vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+		di.transform=transform;
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
-	void PixelGameEngine::DrawPartialWarpedDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint)
+	void PixelGameEngine::DrawPartialWarpedDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint,const GFX3DTransform transform)
 	{
 		DecalInstance di;
 		di.points = 4;
 		di.decal = decal;
 		di.tint = { tint, tint, tint, tint };
 		di.w = { 1, 1, 1, 1 };
+		di.z={z,z,z,z};
 		di.pos.resize(4);
 		di.uv = { { 0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f} };
 		olc::vf2d center;
@@ -3244,11 +3352,13 @@ namespace olc
 			}
 			di.mode = nDecalMode;
 			di.structure = nDecalStructure;
-			vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+			di.transform=transform;
+			if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+			else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 		}
 	}
 
-	void PixelGameEngine::DrawWarpedDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::Pixel& tint)
+	void PixelGameEngine::DrawWarpedDecal(olc::Decal* decal, const olc::vf2d* pos, const olc::Pixel& tint,const GFX3DTransform transform)
 	{
 		// Thanks Nathan Reed, a brilliant article explaining whats going on here
 		// http://www.reedbeta.com/blog/quadrilateral-interpolation-part-1/
@@ -3257,6 +3367,7 @@ namespace olc
 		di.decal = decal;
 		di.tint = { tint, tint, tint, tint };
 		di.w = { 1, 1, 1, 1 };
+		di.z={z,z,z,z};
 		di.pos.resize(4);
 		di.uv = { { 0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f} };
 		olc::vf2d center;
@@ -3276,23 +3387,25 @@ namespace olc
 			}
 			di.mode = nDecalMode;
 			di.structure = nDecalStructure;
-			vLayers[nTargetLayer].vecDecalInstance.push_back(di);
+			di.transform=transform;
+			if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+			else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 		}
 	}
 
-	void PixelGameEngine::DrawWarpedDecal(olc::Decal* decal, const std::array<olc::vf2d, 4>& pos, const olc::Pixel& tint)
-	{ DrawWarpedDecal(decal, pos.data(), tint); }
+	void PixelGameEngine::DrawWarpedDecal(olc::Decal* decal, const std::array<olc::vf2d, 4>& pos, const olc::Pixel& tint,const GFX3DTransform transform)
+	{ DrawWarpedDecal(decal, pos.data(), tint,transform); }
 
-	void PixelGameEngine::DrawWarpedDecal(olc::Decal* decal, const olc::vf2d(&pos)[4], const olc::Pixel& tint)
-	{ DrawWarpedDecal(decal, &pos[0], tint); }
+	void PixelGameEngine::DrawWarpedDecal(olc::Decal* decal, const olc::vf2d(&pos)[4], const olc::Pixel& tint,const GFX3DTransform transform)
+	{ DrawWarpedDecal(decal, &pos[0], tint,transform); }
 
-	void PixelGameEngine::DrawPartialWarpedDecal(olc::Decal* decal, const std::array<olc::vf2d, 4>& pos, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint)
-	{ DrawPartialWarpedDecal(decal, pos.data(), source_pos, source_size, tint); }
+	void PixelGameEngine::DrawPartialWarpedDecal(olc::Decal* decal, const std::array<olc::vf2d, 4>& pos, const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint,const GFX3DTransform transform)
+	{ DrawPartialWarpedDecal(decal, pos.data(), source_pos, source_size, tint,transform); }
 
-	void PixelGameEngine::DrawPartialWarpedDecal(olc::Decal* decal, const olc::vf2d(&pos)[4], const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint)
-	{ DrawPartialWarpedDecal(decal, &pos[0], source_pos, source_size, tint); }
+	void PixelGameEngine::DrawPartialWarpedDecal(olc::Decal* decal, const olc::vf2d(&pos)[4], const olc::vf2d& source_pos, const olc::vf2d& source_size, const olc::Pixel& tint,const GFX3DTransform transform)
+	{ DrawPartialWarpedDecal(decal, &pos[0], source_pos, source_size, tint,transform); }
 
-	void PixelGameEngine::DrawStringDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col, const olc::vf2d& scale)
+	void PixelGameEngine::DrawStringDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col, const olc::vf2d& scale,const GFX3DTransform transform)
 	{
 		olc::vf2d spos = { 0.0f, 0.0f };
 		for (auto c : sText)
@@ -3309,13 +3422,36 @@ namespace olc
 			{
 				int32_t ox = (c - 32) % 16;
 				int32_t oy = (c - 32) / 16;
-				DrawPartialDecal(pos + spos, fontRenderable.Decal(), {float(ox) * 8.0f, float(oy) * 8.0f}, {8.0f, 8.0f}, scale, col);
+				DrawPartialDecal(pos + spos, fontRenderable.Decal(), {float(ox) * 8.0f, float(oy) * 8.0f}, {8.0f, 8.0f}, scale, col,transform);
+				spos.x += 8.0f * scale.x;
+			}
+		}
+	}
+	void PixelGameEngine::DrawShadowStringDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col, const Pixel shadowCol, const olc::vf2d& scale,const GFX3DTransform transform)
+	{
+		olc::vf2d spos = { 0.0f, 0.0f };
+		for (auto c : sText)
+		{
+			if (c == '\n')
+			{
+				spos.x = 0; spos.y += 8.0f * scale.y;
+			}
+			else if (c == '\t')
+			{
+				spos.x += 8.0f * float(nTabSizeInSpaces) * scale.x;
+			}
+			else
+			{
+				int32_t ox = (c - 32) % 16;
+				int32_t oy = (c - 32) / 16;
+				DrawPartialDecal(pos + spos - 1, shadowFontRenderable.Decal(), {float(ox) * 10.0f, float(oy) * 10.0f}, {10.0f, 10.0f}, scale, shadowCol,transform);
+				DrawPartialDecal(pos + spos, fontRenderable.Decal(), {float(ox) * 8.0f, float(oy) * 8.0f}, {8.0f, 8.0f}, scale, col,transform);
 				spos.x += 8.0f * scale.x;
 			}
 		}
 	}
 
-	void PixelGameEngine::DrawStringPropDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col, const olc::vf2d& scale)
+	void PixelGameEngine::DrawStringPropDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col, const olc::vf2d& scale,const GFX3DTransform transform)
 	{
 		olc::vf2d spos = { 0.0f, 0.0f };
 		for (auto c : sText)
@@ -3332,13 +3468,36 @@ namespace olc
 			{
 				int32_t ox = (c - 32) % 16;
 				int32_t oy = (c - 32) / 16;
-				DrawPartialDecal(pos + spos, fontRenderable.Decal(), { float(ox) * 8.0f + float(vFontSpacing[c - 32].x), float(oy) * 8.0f }, { float(vFontSpacing[c - 32].y), 8.0f }, scale, col);
+				DrawPartialDecal(pos + spos, fontRenderable.Decal(), { float(ox) * 8.0f + float(vFontSpacing[c - 32].x), float(oy) * 8.0f }, { float(vFontSpacing[c - 32].y), 8.0f }, scale, col,transform);
+				spos.x += float(vFontSpacing[c - 32].y) * scale.x;
+			}
+		}
+	}
+	void PixelGameEngine::DrawShadowStringPropDecal(const olc::vf2d& pos, const std::string& sText, const Pixel col, const Pixel shadowCol, const olc::vf2d& scale,const GFX3DTransform transform)
+	{
+		olc::vf2d spos = { 0.0f, 0.0f };
+		for (auto c : sText)
+		{
+			if (c == '\n')
+			{
+				spos.x = 0; spos.y += 8.0f * scale.y;
+			}
+			else if (c == '\t')
+			{
+				spos.x += 8.0f * float(nTabSizeInSpaces) * scale.x;
+			}
+			else
+			{
+				int32_t ox = (c - 32) % 16;
+				int32_t oy = (c - 32) / 16;
+				DrawPartialDecal(pos + spos - 1, shadowFontRenderable.Decal(), { float(ox) * 10.0f + float(vFontSpacing[c - 32].x), float(oy) * 10.0f }, { float(vFontSpacing[c - 32].y)+2.f, 10.0f }, scale, shadowCol,transform);
+				DrawPartialDecal(pos + spos, fontRenderable.Decal(), { float(ox) * 8.0f + float(vFontSpacing[c - 32].x), float(oy) * 8.0f }, { float(vFontSpacing[c - 32].y), 8.0f }, scale, col,transform);
 				spos.x += float(vFontSpacing[c - 32].y) * scale.x;
 			}
 		}
 	}
 	// Thanks Oso-Grande/Sopadeoso For these awesom and stupidly clever Text Rotation routines... duh XD
-	void PixelGameEngine::DrawRotatedStringDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center, const Pixel col, const olc::vf2d& scale)
+	void PixelGameEngine::DrawRotatedStringDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center, const Pixel col, const olc::vf2d& scale,const GFX3DTransform transform)
 	{
 		olc::vf2d spos = center;
 		for (auto c : sText)
@@ -3355,13 +3514,13 @@ namespace olc
 			{
 				int32_t ox = (c - 32) % 16;
 				int32_t oy = (c - 32) / 16;
-				DrawPartialRotatedDecal(pos, fontRenderable.Decal(), fAngle, spos, { float(ox) * 8.0f, float(oy) * 8.0f }, { 8.0f, 8.0f }, scale, col);
+				DrawPartialRotatedDecal(pos, fontRenderable.Decal(), fAngle, spos, { float(ox) * 8.0f, float(oy) * 8.0f }, { 8.0f, 8.0f }, scale, col,transform);
 				spos.x -= 8.0f;
 			}
 		}
 	}
 
-	void PixelGameEngine::DrawRotatedStringPropDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center, const Pixel col, const olc::vf2d& scale)
+	void PixelGameEngine::DrawRotatedStringPropDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center, const Pixel col, const olc::vf2d& scale,const GFX3DTransform transform)
 	{
 		olc::vf2d spos = center;
 		for (auto c : sText)
@@ -3378,7 +3537,55 @@ namespace olc
 			{
 				int32_t ox = (c - 32) % 16;
 				int32_t oy = (c - 32) / 16;
-				DrawPartialRotatedDecal(pos, fontRenderable.Decal(), fAngle, spos, { float(ox) * 8.0f + float(vFontSpacing[c - 32].x), float(oy) * 8.0f }, { float(vFontSpacing[c - 32].y), 8.0f }, scale, col);
+				DrawPartialRotatedDecal(pos, fontRenderable.Decal(), fAngle, spos, { float(ox) * 8.0f + float(vFontSpacing[c - 32].x), float(oy) * 8.0f }, { float(vFontSpacing[c - 32].y), 8.0f }, scale, col,transform);
+				spos.x -= float(vFontSpacing[c - 32].y);
+			}
+		}
+	}
+	// Thanks Oso-Grande/Sopadeoso For these awesom and stupidly clever Text Rotation routines... duh XD
+	void PixelGameEngine::DrawShadowRotatedStringDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center, const Pixel col, const Pixel shadowCol, const olc::vf2d& scale,const GFX3DTransform transform)
+	{
+		olc::vf2d spos = center;
+		for (auto c : sText)
+		{
+			if (c == '\n')
+			{
+				spos.x = center.x; spos.y -= 8.0f;
+			}
+			else if (c == '\t')
+			{
+				spos.x += 8.0f * float(nTabSizeInSpaces) * scale.x;
+			}
+			else
+			{
+				int32_t ox = (c - 32) % 16;
+				int32_t oy = (c - 32) / 16;
+				DrawPartialRotatedDecal(pos-scale, shadowFontRenderable.Decal(), fAngle, spos, { float(ox) * 10.0f, float(oy) * 10.0f }, { 10.0f, 10.0f }, scale, shadowCol,transform);
+				DrawPartialRotatedDecal(pos, fontRenderable.Decal(), fAngle, spos, { float(ox) * 8.0f, float(oy) * 8.0f }, { 8.0f, 8.0f }, scale, col,transform);
+				spos.x -= 8.0f;
+			}
+		}
+	}
+
+	void PixelGameEngine::DrawShadowRotatedStringPropDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center, const Pixel col, const Pixel shadowCol, const olc::vf2d& scale,const GFX3DTransform transform)
+	{
+		olc::vf2d spos = center;
+		for (auto c : sText)
+		{
+			if (c == '\n')
+			{
+				spos.x = center.x; spos.y -= 8.0f;
+			}
+			else if (c == '\t')
+			{
+				spos.x += 8.0f * float(nTabSizeInSpaces) * scale.x;
+			}
+			else
+			{
+				int32_t ox = (c - 32) % 16;
+				int32_t oy = (c - 32) / 16;
+				DrawPartialRotatedDecal(pos-scale, shadowFontRenderable.Decal(), fAngle, spos, { float(ox) * 10.0f + float(vFontSpacing[c - 32].x), float(oy) * 10.0f }, { float(vFontSpacing[c - 32].y)+2.f, 10.0f }, scale, shadowCol,transform);
+				DrawPartialRotatedDecal(pos, fontRenderable.Decal(), fAngle, spos, { float(ox) * 8.0f + float(vFontSpacing[c - 32].x), float(oy) * 8.0f }, { float(vFontSpacing[c - 32].y), 8.0f }, scale, col,transform);
 				spos.x -= float(vFontSpacing[c - 32].y);
 			}
 		}
@@ -3529,7 +3736,9 @@ namespace olc
 		funcPixelMode = pixelMode;
 		nPixelMode = Pixel::Mode::CUSTOM;
 	}
-
+	void PixelGameEngine::SetZ(const float z){
+		this->z=z;
+	}
 	void PixelGameEngine::SetPixelBlend(float fBlend)
 	{
 		fBlendFactor = fBlend;
@@ -3675,10 +3884,6 @@ namespace olc
 			}
 
 		// Check for command characters
-		if (GetKey(olc::Key::LEFT).bPressed)
-			nTextEntryCursor = std::max(0, nTextEntryCursor - 1);
-		if (GetKey(olc::Key::RIGHT).bPressed)
-			nTextEntryCursor = std::min(int32_t(sTextEntryString.size()), nTextEntryCursor + 1);
 		if (GetKey(olc::Key::BACK).bPressed && nTextEntryCursor > 0)
 		{
 			sTextEntryString.erase(nTextEntryCursor-1, 1);
@@ -3687,40 +3892,11 @@ namespace olc
 		if (GetKey(olc::Key::DEL).bPressed && nTextEntryCursor < sTextEntryString.size())
 			sTextEntryString.erase(nTextEntryCursor, 1);	
 
-		if (GetKey(olc::Key::UP).bPressed)
-		{
-			if (!sCommandHistory.empty())
-			{
-				if (sCommandHistoryIt != sCommandHistory.begin())
-					sCommandHistoryIt--;
-
-				nTextEntryCursor = int32_t(sCommandHistoryIt->size());
-				sTextEntryString = *sCommandHistoryIt;
-			}
-		}
-
-		if (GetKey(olc::Key::DOWN).bPressed)
-		{	
-			if (!sCommandHistory.empty())
-			{
-				if (sCommandHistoryIt != sCommandHistory.end())
-				{
-					sCommandHistoryIt++;
-					if (sCommandHistoryIt != sCommandHistory.end())
-					{
-						nTextEntryCursor = int32_t(sCommandHistoryIt->size());
-						sTextEntryString = *sCommandHistoryIt;
-					}
-					else
-					{
-						nTextEntryCursor = 0;
-						sTextEntryString = "";
-					}
-				}
-			}
-		}
-
-		if (GetKey(olc::Key::ENTER).bPressed)
+		
+		if(GetKey(olc::Key::ESCAPE).bPressed){
+			OnTextEntryCancelled(sTextEntryString);
+			TextEntryEnable(false);
+		}else if (GetKey(olc::Key::ENTER).bPressed)
 		{
 			if (bConsoleShow)
 			{
@@ -3735,8 +3911,8 @@ namespace olc
 			}
 			else
 			{
-				OnTextEntryComplete(sTextEntryString);
 				TextEntryEnable(false);
+				OnTextEntryComplete(sTextEntryString);
 			}
 		}
 	}
@@ -3754,6 +3930,7 @@ namespace olc
 	bool PixelGameEngine::OnUserDestroy()
 	{ return true; }
 
+	void PixelGameEngine::OnTextEntryCancelled(const std::string& sText) { UNUSED(sText); }
 	void PixelGameEngine::OnTextEntryComplete(const std::string& sText) { UNUSED(sText); }
 	bool PixelGameEngine::OnConsoleCommand(const std::string& sCommand) { UNUSED(sCommand); return false; }
 	
@@ -3891,7 +4068,8 @@ namespace olc
 		m_tp1 = std::chrono::system_clock::now();
 		m_tp2 = std::chrono::system_clock::now();
 	}
-
+	
+	void PixelGameEngine::Apply3DTransform(std::vector<DecalInstance>&decals){}
 
 	void PixelGameEngine::olc_CoreUpdate()
 	{
@@ -3901,7 +4079,7 @@ namespace olc
 		m_tp1 = m_tp2;
 
 		// Our time per frame coefficient
-		float fElapsedTime = elapsedTime.count();
+		float fElapsedTime = std::clamp(elapsedTime.count(),0.f,1/30.f);
 		fLastElapsed = fElapsedTime;
 
 		if (bConsoleSuspendTime)
@@ -3994,10 +4172,17 @@ namespace olc
 
 					renderer->DrawLayerQuad(layer->vOffset, layer->vScale, layer->tint);
 
+					Apply3DTransform(layer->vecDecalInstance);
+
 					// Display Decals in order for this layer
-					for (auto& decal : layer->vecDecalInstance)
+					for (auto& decal : layer->vecDecalInstance){
 						renderer->DrawDecal(decal);
+					}
 					layer->vecDecalInstance.clear();
+					for (auto& decal : layer->vecForegroundDecalInstance){
+						renderer->DrawDecal(decal);
+					}
+					layer->vecForegroundDecalInstance.clear();
 				}
 				else
 				{
@@ -4046,6 +4231,7 @@ namespace olc
 		data += "?P9PL020O`<`N3R0@E4HC7b0@ET<ATB0@@l6C4B0O`H3N7b0?P01L3R000000020";
 
 		fontRenderable.Create(128, 48);
+		shadowFontRenderable.Load("assets/font_shadow.png");
 
 		int px = 0, py = 0;
 		for (size_t b = 0; b < 1024; b += 4)
@@ -4489,10 +4675,6 @@ namespace olc
 			else
 				glBindTexture(GL_TEXTURE_2D, decal.decal->id);
 			
-			if (decal.depth)
-			{
-				glEnable(GL_DEPTH_TEST);
-			}
 
 			if (nDecalMode == DecalMode::WIREFRAME)
 				glBegin(GL_LINE_LOOP);
@@ -4506,34 +4688,15 @@ namespace olc
 					glBegin(GL_TRIANGLES);
 			}
 
-			if (decal.depth)
+			// Render as 2D Spatial entity
+			for (uint32_t n = 0; n < decal.points; n++)
 			{
-
-				// Render as 3D Spatial Entity
-				for (uint32_t n = 0; n < decal.points; n++)
-				{
-					glColor4ub(decal.tint[n].r, decal.tint[n].g, decal.tint[n].b, decal.tint[n].a);
-					glTexCoord4f(decal.uv[n].x, decal.uv[n].y, 0.0f, decal.w[n]);
-					glVertex3f(decal.pos[n].x, decal.pos[n].y, decal.z[n]);
-				}
-			}
-			else
-			{
-				// Render as 2D Spatial entity
-				for (uint32_t n = 0; n < decal.points; n++)
-				{
-					glColor4ub(decal.tint[n].r, decal.tint[n].g, decal.tint[n].b, decal.tint[n].a);
-					glTexCoord4f(decal.uv[n].x, decal.uv[n].y, 0.0f, decal.w[n]);
-					glVertex2f(decal.pos[n].x, decal.pos[n].y);
-				}
+				glColor4ub(decal.tint[n].r, decal.tint[n].g, decal.tint[n].b, decal.tint[n].a);
+				glTexCoord4f(decal.uv[n].x, decal.uv[n].y, 0.0f, decal.w[n]);
+				glVertex2f(decal.pos[n].x, decal.pos[n].y);
 			}
 
 			glEnd();
-
-			if (decal.depth)
-			{
-				glDisable(GL_DEPTH_TEST);
-			}
 		
 		}
 
@@ -6567,7 +6730,10 @@ namespace olc
 
 
 		virtual olc::rcode SetWindowTitle(const std::string& s) override
-		{ emscripten_set_window_title(s.c_str()); return olc::OK; }
+		{
+			// emscripten_set_window_title(s.c_str());
+			return olc::OK;
+		}
 
 		virtual olc::rcode StartSystemEventLoop() override 
 		{ return olc::OK; }
@@ -6742,10 +6908,11 @@ namespace olc
 }
 
 #pragma endregion
-
+	
 #endif // End OLC_PGE_APPLICATION
 
 // O------------------------------------------------------------------------------O
 // | END OF OLC_PGE_APPLICATION                                                   |
 // O------------------------------------------------------------------------------O
 
+using namespace olc;

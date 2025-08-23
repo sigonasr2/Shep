@@ -366,6 +366,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="include\miniaudio.h" />
     <ClInclude Include="include\olcPGEX_MiniAudio.h" />
     <ClInclude Include="include\olcPixelGameEngine.h" />
+    <ClInclude Include="include\olcUTIL_Geometry2D.h" />
+    <ClInclude Include="olcPGEXGraphics3D.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
