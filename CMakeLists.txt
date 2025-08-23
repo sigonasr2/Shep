@@ -23,7 +23,7 @@ set(C_CXX_SOURCES_DIR ".")
 #
 #   - the place where your C/C++ header files are located
 #
-set(C_CXX_HEADERS_DIR ".")"
+set(C_CXX_HEADERS_DIR ".")
 
 #
 # ASSETS_DIR

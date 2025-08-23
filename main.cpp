@@ -20,7 +20,7 @@ public:
 	GFX3D::vec3d vUp{0,0,1};
 	GFX3D::vec3d vEye{0.f,-5.f,2.f};
 	GFX3D::mat4x4 camRot{GFX3D::Math::Mat_MakeRotationX(util::degToRad(5))};
-	GFX3D::vec3d vLookDir{GFX3D::Math::Mat_MultiplyVector(camRot,{0,0,-1})};
+	GFX3D::vec3d vLookDir{GFX3D::Math::Mat_MultiplyVector(camRot,{0,0,1})};
 
 	bool OnUserCreate() override
 	{
