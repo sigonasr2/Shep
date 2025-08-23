@@ -68,10 +68,11 @@ public:
 	olc::mf4d matView;
 	olc::mf4d matProject;
 	
-	olc::Renderable texCube,texSpace;
+	olc::Renderable texCube,texSpace,texBuilding;
 	olc::utils::hw3d::mesh meshFloorSpr;
 	olc::utils::hw3d::mesh meshSpr;
 	olc::utils::hw3d::mesh meshLightCube;
+	olc::utils::hw3d::mesh meshBuilding;
 
 	std::array<olc::vf3d, 64> cubes;
 	std::array<olc::vf3d, 3> lights;
@@ -112,11 +113,20 @@ public:
 		CreateSpriteMesh();
 		CreateFloorSpriteMesh();
 
+		auto buildingLoad{hw3d::LoadObj("assets/models/building1.obj")};
+		if(!buildingLoad){
+			std::cout<<"Could not load Building!"<<std::endl;
+			throw;
+		}else{
+			meshBuilding=*buildingLoad;
+		}
+
 		// Why 2 cubes? the regular ones will have their vertex information recoloured
 
 		// Create texture (so we dont need to load anything)
 		texCube.Load("assets/gfx/nico-Trapper_512.png");
 		texSpace.Load("assets/gfx/space.png");
+		texBuilding.Load("assets/models/building1.png");
 
 		// Position cubes nicely
 		for(int x=0; x<8; x++)
@@ -138,8 +148,8 @@ public:
 
 	hw3d::Camera3D_Orbit camera;
 	vf2d moved{};
-	vf3d pos{0,0,-10};
-	float rot{14};
+	vf3d pos{0,-3.04,-10};
+	float rot{28.9};
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
@@ -213,7 +223,12 @@ public:
 		mf4d scale;
 		scale.scale(vf3d{3,3,3});
 		HW3D_DrawObject((matView * matWorld * scale).m, texSpace.Decal(), meshFloorSpr.layout, meshFloorSpr.pos, meshFloorSpr.uv, meshFloorSpr.col);
-
+		
+		matWorld.translate(vf3d{0.5,0,1}+pos);
+		HW3D_SetCullMode(olc::CullMode::CW);
+		HW3D_DrawObject((matView * matWorld).m, texBuilding.Decal(), meshBuilding.layout, meshBuilding.pos, meshBuilding.uv, meshBuilding.col);
+		
+		HW3D_SetCullMode(olc::CullMode::CCW);
 		// Draw light cubes
 		matWorld.translate(lights[0]+pos);
 		HW3D_DrawObject((matView * matWorld).m, nullptr, meshLightCube.layout, meshLightCube.pos, meshLightCube.uv, meshLightCube.col, olc::RED);

@@ -445,3 +445,4 @@ FodyWeavers.xsd
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,c++
 /CMakeFiles
 /CMakeCache.txt
+/assets/gfx/Cute RPG

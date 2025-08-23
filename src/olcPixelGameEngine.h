@@ -2148,6 +2148,8 @@ namespace olc
 		{
 			pSprite.release();
 			pSprite = nullptr;
+			std::cout<<"Could not load image "<<sFile<<std::endl;
+			throw;
 			return olc::rcode::NO_FILE;
 		}
 	}
