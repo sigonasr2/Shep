@@ -1215,7 +1215,7 @@ namespace olc::utils::hw3d
 			olc::vf3d ray_projected = mf4d(matProjectionInv) * vf3d(ray_parallel);
 			ray_projected.w = 0.0f;
 			// Invert into world space (relative to 0,0,0)
-			olc::vf3d ray_world = matViewInv * ray_projected;
+			olc::vf3d ray_world = mf4d(matViewInv) * vf3d(ray_projected);
 			ray_world.w = 0.0f;
 			// Return normalised ray to be tidy
 			return ray_world.norm();
