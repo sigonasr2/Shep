@@ -344,21 +344,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="J:\Shep\main.cpp" />
-    <ClCompile Include="J:\Shep\olcPGEX_MiniAudio.cpp" />
-    <ClCompile Include="J:\Shep\olcPixelGameEngine.cpp" />
-    <ClCompile Include="J:\Shep\util.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\olcPGEX_MiniAudio.cpp" />
+    <ClCompile Include="src\olcPixelGameEngine.cpp" />
+    <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="miniaudio.h" />
-    <ClInclude Include="olcPGEX_MiniAudio.h" />
-    <ClInclude Include="olcPixelGameEngine.h" />
-    <ClInclude Include="olcUTIL_Geometry2D.h" />
-    <ClInclude Include="olcUTIL_Hardware3D.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="util.h" />
+    <ClInclude Include="src\miniaudio.h" />
+    <ClInclude Include="src\olcPGEX_MiniAudio.h" />
+    <ClInclude Include="src\olcPixelGameEngine.h" />
+    <ClInclude Include="src\olcUTIL_Geometry2D.h" />
+    <ClInclude Include="src\olcUTIL_Hardware3D.h" />
+    <ClInclude Include="src\util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

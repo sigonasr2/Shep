@@ -141,125 +141,101 @@ copy_data/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\copy_data.dir\build.make CMakeFiles/copy_data.dir/build
 .PHONY : copy_data/fast
 
-CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.o: CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.o
-.PHONY : CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.o
+src/main.o: src/main.cpp.o
+.PHONY : src/main.o
 
 # target to build an object file
-CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.o
-.PHONY : CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.o
+src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
 
-CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.i: CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.i
-.PHONY : CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.i
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
 
 # target to preprocess a source file
-CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.i
-.PHONY : CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.i
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
 
-CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.s: CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.s
-.PHONY : CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.s
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
 
 # target to generate assembly for a file
-CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.s
-.PHONY : CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.cpp.s
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
 
-main.o: main.cpp.o
-.PHONY : main.o
+src/olcPGEX_MiniAudio.o: src/olcPGEX_MiniAudio.cpp.o
+.PHONY : src/olcPGEX_MiniAudio.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/main.cpp.o
-.PHONY : main.cpp.o
+src/olcPGEX_MiniAudio.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/olcPGEX_MiniAudio.cpp.o
+.PHONY : src/olcPGEX_MiniAudio.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+src/olcPGEX_MiniAudio.i: src/olcPGEX_MiniAudio.cpp.i
+.PHONY : src/olcPGEX_MiniAudio.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/main.cpp.i
-.PHONY : main.cpp.i
+src/olcPGEX_MiniAudio.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/olcPGEX_MiniAudio.cpp.i
+.PHONY : src/olcPGEX_MiniAudio.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+src/olcPGEX_MiniAudio.s: src/olcPGEX_MiniAudio.cpp.s
+.PHONY : src/olcPGEX_MiniAudio.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/main.cpp.s
-.PHONY : main.cpp.s
+src/olcPGEX_MiniAudio.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/olcPGEX_MiniAudio.cpp.s
+.PHONY : src/olcPGEX_MiniAudio.cpp.s
 
-olcPGEX_MiniAudio.o: olcPGEX_MiniAudio.cpp.o
-.PHONY : olcPGEX_MiniAudio.o
+src/olcPixelGameEngine.o: src/olcPixelGameEngine.cpp.o
+.PHONY : src/olcPixelGameEngine.o
 
 # target to build an object file
-olcPGEX_MiniAudio.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/olcPGEX_MiniAudio.cpp.o
-.PHONY : olcPGEX_MiniAudio.cpp.o
+src/olcPixelGameEngine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/olcPixelGameEngine.cpp.o
+.PHONY : src/olcPixelGameEngine.cpp.o
 
-olcPGEX_MiniAudio.i: olcPGEX_MiniAudio.cpp.i
-.PHONY : olcPGEX_MiniAudio.i
+src/olcPixelGameEngine.i: src/olcPixelGameEngine.cpp.i
+.PHONY : src/olcPixelGameEngine.i
 
 # target to preprocess a source file
-olcPGEX_MiniAudio.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/olcPGEX_MiniAudio.cpp.i
-.PHONY : olcPGEX_MiniAudio.cpp.i
+src/olcPixelGameEngine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/olcPixelGameEngine.cpp.i
+.PHONY : src/olcPixelGameEngine.cpp.i
 
-olcPGEX_MiniAudio.s: olcPGEX_MiniAudio.cpp.s
-.PHONY : olcPGEX_MiniAudio.s
+src/olcPixelGameEngine.s: src/olcPixelGameEngine.cpp.s
+.PHONY : src/olcPixelGameEngine.s
 
 # target to generate assembly for a file
-olcPGEX_MiniAudio.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/olcPGEX_MiniAudio.cpp.s
-.PHONY : olcPGEX_MiniAudio.cpp.s
+src/olcPixelGameEngine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/olcPixelGameEngine.cpp.s
+.PHONY : src/olcPixelGameEngine.cpp.s
 
-olcPixelGameEngine.o: olcPixelGameEngine.cpp.o
-.PHONY : olcPixelGameEngine.o
+src/util.o: src/util.cpp.o
+.PHONY : src/util.o
 
 # target to build an object file
-olcPixelGameEngine.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/olcPixelGameEngine.cpp.o
-.PHONY : olcPixelGameEngine.cpp.o
+src/util.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/util.cpp.o
+.PHONY : src/util.cpp.o
 
-olcPixelGameEngine.i: olcPixelGameEngine.cpp.i
-.PHONY : olcPixelGameEngine.i
-
-# target to preprocess a source file
-olcPixelGameEngine.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/olcPixelGameEngine.cpp.i
-.PHONY : olcPixelGameEngine.cpp.i
-
-olcPixelGameEngine.s: olcPixelGameEngine.cpp.s
-.PHONY : olcPixelGameEngine.s
-
-# target to generate assembly for a file
-olcPixelGameEngine.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/olcPixelGameEngine.cpp.s
-.PHONY : olcPixelGameEngine.cpp.s
-
-util.o: util.cpp.o
-.PHONY : util.o
-
-# target to build an object file
-util.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/util.cpp.o
-.PHONY : util.cpp.o
-
-util.i: util.cpp.i
-.PHONY : util.i
+src/util.i: src/util.cpp.i
+.PHONY : src/util.i
 
 # target to preprocess a source file
-util.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/util.cpp.i
-.PHONY : util.cpp.i
+src/util.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/util.cpp.i
+.PHONY : src/util.cpp.i
 
-util.s: util.cpp.s
-.PHONY : util.s
+src/util.s: src/util.cpp.s
+.PHONY : src/util.s
 
 # target to generate assembly for a file
-util.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/util.cpp.s
-.PHONY : util.cpp.s
+src/util.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/util.cpp.s
+.PHONY : src/util.cpp.s
 
 # Help Target
 help:
@@ -271,21 +247,18 @@ help:
 	@echo ... rebuild_cache
 	@echo ... copy_data
 	@echo ... Shep
-	@echo ... CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.o
-	@echo ... CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.i
-	@echo ... CMakeFiles/4.0.2/CompilerIdCXX/CMakeCXXCompilerId.s
-	@echo ... main.o
-	@echo ... main.i
-	@echo ... main.s
-	@echo ... olcPGEX_MiniAudio.o
-	@echo ... olcPGEX_MiniAudio.i
-	@echo ... olcPGEX_MiniAudio.s
-	@echo ... olcPixelGameEngine.o
-	@echo ... olcPixelGameEngine.i
-	@echo ... olcPixelGameEngine.s
-	@echo ... util.o
-	@echo ... util.i
-	@echo ... util.s
+	@echo ... src/main.o
+	@echo ... src/main.i
+	@echo ... src/main.s
+	@echo ... src/olcPGEX_MiniAudio.o
+	@echo ... src/olcPGEX_MiniAudio.i
+	@echo ... src/olcPGEX_MiniAudio.s
+	@echo ... src/olcPixelGameEngine.o
+	@echo ... src/olcPixelGameEngine.i
+	@echo ... src/olcPixelGameEngine.s
+	@echo ... src/util.o
+	@echo ... src/util.i
+	@echo ... src/util.s
 .PHONY : help
 
 

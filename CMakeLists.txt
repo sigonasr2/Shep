@@ -16,14 +16,14 @@ option(HAS_TERMINAL "Show a terminal window for STDOUT/STDERR" ON)
 #
 #   - the place where your C/C++ source files are located
 #
-set(C_CXX_SOURCES_DIR ".")
+set(C_CXX_SOURCES_DIR "src")
 
 #
 # C_CXX_HEADERS_DIR
 #
 #   - the place where your C/C++ header files are located
 #
-set(C_CXX_HEADERS_DIR ".")
+set(C_CXX_HEADERS_DIR "src")
 
 #
 # ASSETS_DIR
@@ -247,6 +247,7 @@ if (EMSCRIPTEN)
             -sMIN_WEBGL_VERSION=2
             -sUSE_LIBPNG=1
             -sLLD_REPORT_UNDEFINED
+	    -sEXPORTED_RUNTIME_METHODS=HEAPF32
             --preload-file ${SOURCE_DATA_DIR}@assets)
     else()
         target_link_options(
@@ -256,6 +257,7 @@ if (EMSCRIPTEN)
             -sMAX_WEBGL_VERSION=2
             -sMIN_WEBGL_VERSION=2
             -sUSE_LIBPNG=1
+            -sEXPORTED_RUNTIME_METHODS=HEAPF32
             -sLLD_REPORT_UNDEFINED)
     endif()
 
