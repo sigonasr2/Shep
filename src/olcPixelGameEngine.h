@@ -5887,7 +5887,7 @@ namespace olc
 				"uniform sampler2D sprTex;\n"
 				"void main(){"
 				"vec4 col = texture(sprTex, oTex) * oCol;"
-				"if(col.a<0.1)discard;"
+				"if(col.a<0.01)discard;"
 				"pixel=col;}";
 			locShaderSource(m_nFS, 1, &strFS, NULL);
 			locCompileShader(m_nFS);

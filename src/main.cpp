@@ -77,12 +77,12 @@ public:
 	std::array<olc::vf3d, 3> lights;
 	
 	void CreateSpriteMesh(){
-		meshSpr.pos.push_back({ 0,0,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 1 }); meshSpr.col.push_back(olc::WHITE);
-		meshSpr.pos.push_back({ 1,0,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 1 }); meshSpr.col.push_back(olc::WHITE);
-		meshSpr.pos.push_back({ 1,1,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 0 }); meshSpr.col.push_back(olc::WHITE);
-		meshSpr.pos.push_back({ 0,0,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 1 }); meshSpr.col.push_back(olc::WHITE);
-		meshSpr.pos.push_back({ 1,1,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 0 }); meshSpr.col.push_back(olc::WHITE);
-		meshSpr.pos.push_back({ 0,1,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 0 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 0,0,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 1 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 1,0,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 1 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 1,1,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 0 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 0,0,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 1 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 1,1,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 0 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 0,1,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 0 }); meshSpr.col.push_back(olc::WHITE);
 	}
 	void CreateFloorSpriteMesh(){
 		meshFloorSpr.pos.push_back({ 0,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
@@ -138,15 +138,13 @@ public:
 
 	hw3d::Camera3D_Orbit camera;
 	vf2d moved{};
-	vf3d pos;
+	vf3d pos{0,0,-10};
+	float rot{14};
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
 		
 		olc::mf4d m1, m2, m3, m4;
-
-		camera.Spin(moved+=vf2d{fElapsedTime,fElapsedTime});
-		camera.Update();
 
 		using namespace olc;
 
@@ -156,7 +154,9 @@ public:
 		if(GetKey(olc::Key::DOWN).bHeld)pos.y+=fElapsedTime*5;
 		if(GetKey(olc::Key::PGUP).bHeld)pos.z-=fElapsedTime*5;
 		if(GetKey(olc::Key::PGDN).bHeld)pos.z+=fElapsedTime*5;
-		m2.rotateX(util::degToRad(5));
+		if(GetKey(olc::Key::HOME).bHeld)rot-=fElapsedTime*5;
+		if(GetKey(olc::Key::END).bHeld)rot+=fElapsedTime*5;
+		m2.rotateX(util::degToRad(rot));
 		
 		matView = m2 * m1;
 
@@ -204,11 +204,11 @@ public:
 
 
 		// Draw all cubes
-		for (const auto& cube : cubes)
-		{
-			matWorld.translate(cube+pos);
+		for(int i=0;i<3;i++){
+			matWorld.translate(vf3d{float(i)-0.5f,0,-0.5f}+pos);
 			HW3D_DrawObject((matView * matWorld).m, texCube.Decal(), meshSpr.layout, meshSpr.pos, meshSpr.uv, meshSpr.col);
 		}
+
 		matWorld.translate(vf3d{0,0,0}+pos);
 		mf4d scale;
 		scale.scale(vf3d{3,3,3});
