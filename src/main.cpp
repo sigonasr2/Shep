@@ -51,9 +51,10 @@
 
 
 //#define OLC_GFX_OPENGL33
+#include "olcUTIL_Geometry2D.h"
 #include "olcUTIL_Hardware3D.h"
 #include "olcPixelGameEngine.h"
-
+#include "util.h"
 
 
 class Quad3D : public olc::PixelGameEngine
@@ -69,11 +70,29 @@ public:
 	olc::mf4d matProject;
 	
 	olc::Renderable texCube;
-	olc::utils::hw3d::mesh meshCube;
+	olc::utils::hw3d::mesh meshFloorSpr;
+	olc::utils::hw3d::mesh meshSpr;
 	olc::utils::hw3d::mesh meshLightCube;
 
 	std::array<olc::vf3d, 64> cubes;
 	std::array<olc::vf3d, 3> lights;
+	
+	void CreateSpriteMesh(){
+		meshSpr.pos.push_back({ 0,0,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 1 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 1,0,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 1 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 1,1,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 0 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 0,0,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 1 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 1,1,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 0 }); meshSpr.col.push_back(olc::WHITE);
+		meshSpr.pos.push_back({ 0,1,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 0 }); meshSpr.col.push_back(olc::WHITE);
+	}
+	void CreateFloorSpriteMesh(){
+		meshFloorSpr.pos.push_back({ 0,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 1,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 1,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 0,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 1,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 0,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
+	}
 
 public:
 	bool OnUserCreate() override
@@ -91,24 +110,13 @@ public:
 		matWorld.identity();
 		matView.identity();
 
-		// Create a unit cube, centered on origin
-		meshCube = olc::utils::hw3d::CreateCube({ 1,1,1 }, {-0.5, -0.5, -0.5});
-
-		// Creat another cube, smaller
-		meshLightCube = olc::utils::hw3d::CreateCube({ 0.5,0.5,0.5 }, { -0.25, -0.25, -0.25 });
+		CreateSpriteMesh();
+		CreateFloorSpriteMesh();
 
 		// Why 2 cubes? the regular ones will have their vertex information recoloured
 
 		// Create texture (so we dont need to load anything)
-		texCube.Create(128, 128);
-		SetDrawTarget(texCube.Sprite());
-		Clear(olc::WHITE);
-		FillCircle(64, 64, 32, olc::BLACK);
-		FillCircle(64, 64, 24, olc::BLUE);
-		FillCircle(64, 64, 16, olc::RED);
-		FillCircle(64, 64, 8, olc::YELLOW);
-		SetDrawTarget(nullptr);
-		texCube.Decal()->Update();
+		texCube.Load("assets/gfx/nico-Trapper_512.png");
 
 		// Position cubes nicely
 		for(int x=0; x<8; x++)
@@ -120,40 +128,33 @@ public:
 
 
 		Clear(olc::VERY_DARK_BLUE);
-		HW3D_Projection(matProject.m);
+		HW3D_Projection(camera.GetProjectionMatrix().m);
 		HW3D_SetCullMode(olc::CullMode::CCW);
 		return true;
 	}
 
-	float fThetaX = 1;
-	float fThetaY = 2;
-
 	float fLightTime = 0.0f;
 
-	olc::vf3d pos;
-
+	hw3d::Camera3D_Orbit camera;
+	vf2d moved{};
+	float rot;
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
 		
 		olc::mf4d m1, m2, m3, m4;
 
-		// fake a pseudo-view matrix by transforming in an identity view
-		m1.rotateY(fThetaY);
-		m2.rotateX(fThetaX);
-		m3.translate(pos.x,pos.y,pos.z);
+		camera.Spin(moved+=vf2d{fElapsedTime,fElapsedTime});
+		camera.Update();
 
 		using namespace olc;
 
-		if(GetKey(olc::Key::RIGHT).bHeld)pos.x+=fElapsedTime*5;
-		if(GetKey(olc::Key::LEFT).bHeld)pos.x-=fElapsedTime*5;
-		if(GetKey(olc::Key::UP).bHeld)pos.y-=fElapsedTime*5;
-		if(GetKey(olc::Key::DOWN).bHeld)pos.y+=fElapsedTime*5;
-		if(GetKey(olc::Key::PGUP).bHeld)pos.z-=fElapsedTime*5;
-		if(GetKey(olc::Key::PGDN).bHeld)pos.z+=fElapsedTime*5;
-
-
-		matView = m3 * m2 * m1;
+		if(GetKey(olc::Key::HOME).bHeld)rot-=fElapsedTime*10;
+		if(GetKey(olc::Key::END).bHeld)rot+=fElapsedTime*10;
+		
+		// fake a pseudo-view matrix by transforming in an identity view
+		m2.rotateX(util::degToRad(rot));
+		matView = camera.GetViewMatrix();
 
 		// Clear background
 		ClearBuffer(olc::BLANK, true);
@@ -167,28 +168,33 @@ public:
 		// World Space lighting! The 3 lights are used as directional light sources
 		// so i dont need to pre-compute all the geometry on the CPU. This is a 
 		// limitation of the hw3d approach but like I said, its for basic 3D usage.
-		for (size_t i = 0; i < meshCube.pos.size(); i += 3)
-		{
-			const auto& p0 = meshCube.pos[i + 0];
-			const auto& p1 = meshCube.pos[i + 1];
-			const auto& p2 = meshCube.pos[i + 2];
-
-			// Hand calculate surface normal (i know i know the norms are already there...)
-			olc::vf3d vCross = olc::vf3d(p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]).cross(olc::vf3d(p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2])).norm();
-
-			// Additive colouring
-			meshCube.col[i + 0] = olc::BLACK;
-			meshCube.col[i + 1] = olc::BLACK;
-			meshCube.col[i + 2] = olc::BLACK;
-
-			olc::Pixel c[] = { olc::RED, olc::GREEN, olc::BLUE };
-			for (int j = 0; j < 3; j++)
+		const std::vector<std::reference_wrapper<utils::hw3d::mesh>>meshes{
+			meshSpr,meshFloorSpr,
+		};
+		for(utils::hw3d::mesh&meshRef:meshes){
+			for (size_t i = 0; i < meshRef.pos.size(); i += 3)
 			{
-				olc::vf3d vLight = -lights[j].norm();
-				float illum = std::max(-vCross.dot(vLight), 0.0f) * 0.8f + 0.2f;
-				meshCube.col[i + 0] += olc::PixelF(illum, illum, illum, 1.0f) * c[j];
-				meshCube.col[i + 1] += olc::PixelF(illum, illum, illum, 1.0f) * c[j];
-				meshCube.col[i + 2] += olc::PixelF(illum, illum, illum, 1.0f) * c[j];
+				const auto& p0 = meshRef.pos[i + 0];
+				const auto& p1 = meshRef.pos[i + 1];
+				const auto& p2 = meshRef.pos[i + 2];
+
+				// Hand calculate surface normal (i know i know the norms are already there...)
+				olc::vf3d vCross = olc::vf3d(p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]).cross(olc::vf3d(p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2])).norm();
+
+				// Additive colouring
+				meshRef.col[i + 0] = olc::BLACK;
+				meshRef.col[i + 1] = olc::BLACK;
+				meshRef.col[i + 2] = olc::BLACK;
+
+				olc::Pixel c[] = { olc::RED, olc::GREEN, olc::BLUE };
+				for (int j = 0; j < 3; j++)
+				{
+					olc::vf3d vLight = -lights[j].norm();
+					float illum = std::max(-vCross.dot(vLight), 0.0f) * 0.8f + 0.2f;
+					meshRef.col[i + 0] += olc::PixelF(illum, illum, illum, 1.0f) * c[j];
+					meshRef.col[i + 1] += olc::PixelF(illum, illum, illum, 1.0f) * c[j];
+					meshRef.col[i + 2] += olc::PixelF(illum, illum, illum, 1.0f) * c[j];
+				}
 			}
 		}
 
@@ -197,7 +203,7 @@ public:
 		for (const auto& cube : cubes)
 		{
 			matWorld.translate(cube);
-			HW3D_DrawObject((matView * matWorld).m, texCube.Decal(), meshCube.layout, meshCube.pos, meshCube.uv, meshCube.col);
+			HW3D_DrawObject((matView * matWorld).m, texCube.Decal(), meshSpr.layout, meshSpr.pos, meshSpr.uv, meshSpr.col);
 		}
 
 		// Draw light cubes

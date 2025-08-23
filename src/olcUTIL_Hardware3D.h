@@ -1393,3 +1393,5 @@ namespace olc::utils::hw3d
 	};
 }
 
+
+using namespace olc::utils;
