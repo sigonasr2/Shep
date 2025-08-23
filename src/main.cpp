@@ -50,7 +50,6 @@
 */
 
 
-//#define OLC_GFX_OPENGL33
 #include "olcUTIL_Geometry2D.h"
 #include "olcUTIL_Hardware3D.h"
 #include "olcPixelGameEngine.h"
@@ -69,7 +68,7 @@ public:
 	olc::mf4d matView;
 	olc::mf4d matProject;
 	
-	olc::Renderable texCube;
+	olc::Renderable texCube,texSpace;
 	olc::utils::hw3d::mesh meshFloorSpr;
 	olc::utils::hw3d::mesh meshSpr;
 	olc::utils::hw3d::mesh meshLightCube;
@@ -86,12 +85,12 @@ public:
 		meshSpr.pos.push_back({ 0,1,0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 0 }); meshSpr.col.push_back(olc::WHITE);
 	}
 	void CreateFloorSpriteMesh(){
-		meshFloorSpr.pos.push_back({ 0,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
-		meshFloorSpr.pos.push_back({ 1,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
-		meshFloorSpr.pos.push_back({ 1,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
-		meshFloorSpr.pos.push_back({ 0,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
-		meshFloorSpr.pos.push_back({ 1,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
-		meshFloorSpr.pos.push_back({ 0,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 0,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 1,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 1,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 0,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 1,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
+		meshFloorSpr.pos.push_back({ 0,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
 	}
 
 public:
@@ -117,6 +116,7 @@ public:
 
 		// Create texture (so we dont need to load anything)
 		texCube.Load("assets/gfx/nico-Trapper_512.png");
+		texSpace.Load("assets/gfx/space.png");
 
 		// Position cubes nicely
 		for(int x=0; x<8; x++)
@@ -128,7 +128,8 @@ public:
 
 
 		Clear(olc::VERY_DARK_BLUE);
-		HW3D_Projection(camera.GetProjectionMatrix().m);
+		HW3D_Projection(matProject.m);
+		HW3D_EnableDepthTest(true);
 		HW3D_SetCullMode(olc::CullMode::CCW);
 		return true;
 	}
@@ -137,7 +138,7 @@ public:
 
 	hw3d::Camera3D_Orbit camera;
 	vf2d moved{};
-	float rot;
+	vf3d pos;
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
@@ -149,12 +150,15 @@ public:
 
 		using namespace olc;
 
-		if(GetKey(olc::Key::HOME).bHeld)rot-=fElapsedTime*10;
-		if(GetKey(olc::Key::END).bHeld)rot+=fElapsedTime*10;
+		if(GetKey(olc::Key::RIGHT).bHeld)pos.x+=fElapsedTime*5;
+		if(GetKey(olc::Key::LEFT).bHeld)pos.x-=fElapsedTime*5;
+		if(GetKey(olc::Key::UP).bHeld)pos.y-=fElapsedTime*5;
+		if(GetKey(olc::Key::DOWN).bHeld)pos.y+=fElapsedTime*5;
+		if(GetKey(olc::Key::PGUP).bHeld)pos.z-=fElapsedTime*5;
+		if(GetKey(olc::Key::PGDN).bHeld)pos.z+=fElapsedTime*5;
+		m2.rotateX(util::degToRad(5));
 		
-		// fake a pseudo-view matrix by transforming in an identity view
-		m2.rotateX(util::degToRad(rot));
-		matView = camera.GetViewMatrix();
+		matView = m2 * m1;
 
 		// Clear background
 		ClearBuffer(olc::BLANK, true);
@@ -202,16 +206,20 @@ public:
 		// Draw all cubes
 		for (const auto& cube : cubes)
 		{
-			matWorld.translate(cube);
+			matWorld.translate(cube+pos);
 			HW3D_DrawObject((matView * matWorld).m, texCube.Decal(), meshSpr.layout, meshSpr.pos, meshSpr.uv, meshSpr.col);
 		}
+		matWorld.translate(vf3d{0,0,0}+pos);
+		mf4d scale;
+		scale.scale(vf3d{3,3,3});
+		HW3D_DrawObject((matView * matWorld * scale).m, texSpace.Decal(), meshFloorSpr.layout, meshFloorSpr.pos, meshFloorSpr.uv, meshFloorSpr.col);
 
 		// Draw light cubes
-		matWorld.translate(lights[0]);
+		matWorld.translate(lights[0]+pos);
 		HW3D_DrawObject((matView * matWorld).m, nullptr, meshLightCube.layout, meshLightCube.pos, meshLightCube.uv, meshLightCube.col, olc::RED);
-		matWorld.translate(lights[1]);
+		matWorld.translate(lights[1]+pos);
 		HW3D_DrawObject((matView * matWorld).m, nullptr, meshLightCube.layout, meshLightCube.pos, meshLightCube.uv, meshLightCube.col, olc::GREEN);
-		matWorld.translate(lights[2]);
+		matWorld.translate(lights[2]+pos);
 		HW3D_DrawObject((matView * matWorld).m, nullptr, meshLightCube.layout, meshLightCube.pos, meshLightCube.uv, meshLightCube.col, olc::BLUE);
 		return true;
 	}

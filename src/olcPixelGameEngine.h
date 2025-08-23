@@ -5885,7 +5885,10 @@ namespace olc
 				"in vec2 oTex;\n"
 				"in vec4 oCol;\n"
 				"uniform sampler2D sprTex;\n"
-				"void main(){pixel = texture(sprTex, oTex) * oCol;}";
+				"void main(){"
+				"vec4 col = texture(sprTex, oTex) * oCol;"
+				"if(col.a<0.1)discard;"
+				"pixel=col;}";
 			locShaderSource(m_nFS, 1, &strFS, NULL);
 			locCompileShader(m_nFS);
 
