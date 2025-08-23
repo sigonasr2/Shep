@@ -22,11 +22,11 @@
       <UniqueIdentifier>{A82673E5-F5F2-3F70-A0C3-48F1497712FD}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{0c5bef0d-5dd7-4faa-aa34-7631c042553a}</UniqueIdentifier>
+      <UniqueIdentifier>{7e52ea5d-4b03-4ec0-80f8-5dd9e7638d96}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\miniaudio.h">
+    <ClInclude Include="include\olcPGEX_Graphics3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\olcPGEX_MiniAudio.h">
@@ -38,7 +38,7 @@
     <ClInclude Include="include\olcUTIL_Geometry2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\olcPGEX_Graphics3D.h">
+    <ClInclude Include="include\miniaudio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="util.h">

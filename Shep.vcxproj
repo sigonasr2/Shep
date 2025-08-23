@@ -362,12 +362,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="J:\Shep\copy_data.vcxproj">
-      <Project>{019AAA8C-E480-3778-81D8-B6CCCA60A695}</Project>
-      <Name>copy_data</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\miniaudio.h" />

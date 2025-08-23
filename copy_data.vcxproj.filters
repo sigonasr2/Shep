@@ -2,6 +2,9 @@
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <CustomBuild Include="J:\Shep\assets\.keepme" />
+    <CustomBuild Include="J:\Shep\assets\gfx\nico-Trapper_512.png">
+      <Filter>Resources</Filter>
+    </CustomBuild>
     <CustomBuild Include="J:\Shep\assets\gfx\space.png">
       <Filter>Resources</Filter>
     </CustomBuild>

@@ -161,6 +161,62 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="J:\Shep\assets\gfx\nico-Trapper_512.png">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating bin/assets/gfx/nico-Trapper_512.png</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy J:/Shep/assets/gfx/nico-Trapper_512.png J:/Shep/bin/assets/gfx/nico-Trapper_512.png
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">J:\Shep\bin\assets\gfx\nico-Trapper_512.png</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating bin/assets/gfx/nico-Trapper_512.png</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy J:/Shep/assets/gfx/nico-Trapper_512.png J:/Shep/bin/assets/gfx/nico-Trapper_512.png
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">J:\Shep\bin\assets\gfx\nico-Trapper_512.png</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Generating bin/assets/gfx/nico-Trapper_512.png</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy J:/Shep/assets/gfx/nico-Trapper_512.png J:/Shep/bin/assets/gfx/nico-Trapper_512.png
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">J:\Shep\bin\assets\gfx\nico-Trapper_512.png</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Generating bin/assets/gfx/nico-Trapper_512.png</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy J:/Shep/assets/gfx/nico-Trapper_512.png J:/Shep/bin/assets/gfx/nico-Trapper_512.png
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">J:\Shep\bin\assets\gfx\nico-Trapper_512.png</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
     <CustomBuild Include="J:\Shep\assets\gfx\space.png">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating bin/assets/gfx/space.png</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
@@ -506,7 +562,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">J:\Shep\bin\assets\.keepme;J:\Shep\bin\assets\gfx\space.png;J:\Shep\bin\assets\sounds\Explosions1.wav;J:\Shep\bin\assets\sounds\Laser_Shoot11.wav;J:\Shep\bin\assets\sounds\bg-music.wav;J:\Shep\bin\assets\sounds\lose9.wav;J:\Shep\bin\assets\sounds\thruster.wav;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">J:\Shep\bin\assets\.keepme;J:\Shep\bin\assets\gfx\nico-Trapper_512.png;J:\Shep\bin\assets\gfx\space.png;J:\Shep\bin\assets\sounds\Explosions1.wav;J:\Shep\bin\assets\sounds\Laser_Shoot11.wav;J:\Shep\bin\assets\sounds\bg-music.wav;J:\Shep\bin\assets\sounds\lose9.wav;J:\Shep\bin\assets\sounds\thruster.wav;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">J:\Shep\CMakeFiles\copy_data</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</VerifyInputsAndOutputsExist>
@@ -518,7 +574,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">J:\Shep\bin\assets\.keepme;J:\Shep\bin\assets\gfx\space.png;J:\Shep\bin\assets\sounds\Explosions1.wav;J:\Shep\bin\assets\sounds\Laser_Shoot11.wav;J:\Shep\bin\assets\sounds\bg-music.wav;J:\Shep\bin\assets\sounds\lose9.wav;J:\Shep\bin\assets\sounds\thruster.wav;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">J:\Shep\bin\assets\.keepme;J:\Shep\bin\assets\gfx\nico-Trapper_512.png;J:\Shep\bin\assets\gfx\space.png;J:\Shep\bin\assets\sounds\Explosions1.wav;J:\Shep\bin\assets\sounds\Laser_Shoot11.wav;J:\Shep\bin\assets\sounds\bg-music.wav;J:\Shep\bin\assets\sounds\lose9.wav;J:\Shep\bin\assets\sounds\thruster.wav;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">J:\Shep\CMakeFiles\copy_data</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
@@ -530,7 +586,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">J:\Shep\bin\assets\.keepme;J:\Shep\bin\assets\gfx\space.png;J:\Shep\bin\assets\sounds\Explosions1.wav;J:\Shep\bin\assets\sounds\Laser_Shoot11.wav;J:\Shep\bin\assets\sounds\bg-music.wav;J:\Shep\bin\assets\sounds\lose9.wav;J:\Shep\bin\assets\sounds\thruster.wav;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">J:\Shep\bin\assets\.keepme;J:\Shep\bin\assets\gfx\nico-Trapper_512.png;J:\Shep\bin\assets\gfx\space.png;J:\Shep\bin\assets\sounds\Explosions1.wav;J:\Shep\bin\assets\sounds\Laser_Shoot11.wav;J:\Shep\bin\assets\sounds\bg-music.wav;J:\Shep\bin\assets\sounds\lose9.wav;J:\Shep\bin\assets\sounds\thruster.wav;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">J:\Shep\CMakeFiles\copy_data</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</VerifyInputsAndOutputsExist>
@@ -542,7 +598,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">J:\Shep\bin\assets\.keepme;J:\Shep\bin\assets\gfx\space.png;J:\Shep\bin\assets\sounds\Explosions1.wav;J:\Shep\bin\assets\sounds\Laser_Shoot11.wav;J:\Shep\bin\assets\sounds\bg-music.wav;J:\Shep\bin\assets\sounds\lose9.wav;J:\Shep\bin\assets\sounds\thruster.wav;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">J:\Shep\bin\assets\.keepme;J:\Shep\bin\assets\gfx\nico-Trapper_512.png;J:\Shep\bin\assets\gfx\space.png;J:\Shep\bin\assets\sounds\Explosions1.wav;J:\Shep\bin\assets\sounds\Laser_Shoot11.wav;J:\Shep\bin\assets\sounds\bg-music.wav;J:\Shep\bin\assets\sounds\lose9.wav;J:\Shep\bin\assets\sounds\thruster.wav;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">J:\Shep\CMakeFiles\copy_data</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</VerifyInputsAndOutputsExist>

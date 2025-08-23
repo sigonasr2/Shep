@@ -867,6 +867,7 @@ namespace olc
 
 	enum class GFX3DTransform
 	{
+		POPUP_SPRITE,
 		TRANSFORM_REQUIRED,
 		NO_TRANSFORM
 	};
@@ -2891,7 +2892,7 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
 		di.transform=transform;
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -2922,7 +2923,7 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
 		di.transform=transform;
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -2952,7 +2953,7 @@ namespace olc
 		di.structure = nDecalStructure;
 		di.transform=transform;
 		di.z = {z,z,z,z};
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -2994,7 +2995,7 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
 		di.transform=transform;
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -3018,7 +3019,7 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
 		di.transform=transform;
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -3042,7 +3043,7 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
 		di.transform=transform;
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -3075,7 +3076,7 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
 		di.transform=transform;
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -3099,7 +3100,7 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
 		di.transform=transform;
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -3127,7 +3128,7 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = DecalStructure::LIST;
 		di.depth = true;
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -3170,7 +3171,7 @@ namespace olc
 			di.mode = nDecalMode;
 			di.structure = nDecalStructure;
 			di.depth = true;
-			if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+			if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 			else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 		}
 	}
@@ -3284,7 +3285,7 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
 		di.transform=transform;
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -3316,7 +3317,7 @@ namespace olc
 		di.mode = nDecalMode;
 		di.structure = nDecalStructure;
 		di.transform=transform;
-		if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+		if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 		else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 	}
 
@@ -3352,7 +3353,7 @@ namespace olc
 			di.mode = nDecalMode;
 			di.structure = nDecalStructure;
 			di.transform=transform;
-			if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+			if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 			else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 		}
 	}
@@ -3387,7 +3388,7 @@ namespace olc
 			di.mode = nDecalMode;
 			di.structure = nDecalStructure;
 			di.transform=transform;
-			if(transform==GFX3DTransform::TRANSFORM_REQUIRED)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
+			if(transform==GFX3DTransform::TRANSFORM_REQUIRED||transform==GFX3DTransform::POPUP_SPRITE)vLayers[nTargetLayer].vecDecalInstance.emplace_back(di);
 			else vLayers[nTargetLayer].vecForegroundDecalInstance.emplace_back(di);
 		}
 	}
