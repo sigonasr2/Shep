@@ -652,6 +652,18 @@ namespace olc
 			return out;
 		}
 
+		template<class TL,class TR>
+		inline constexpr m_4d<TL>& operator * (const v_3d<TR>& rhs)
+		{
+			auto& me = *this;
+			olc::v_3d<TR> vOut;
+			vOut.x = TR(me(0, 0) * rhs.x + me(1, 0) * rhs.y + me(2, 0) * rhs.z + me(3, 0) * rhs.w);
+			vOut.y = TR(me(0, 1) * rhs.x + me(1, 1) * rhs.y + me(2, 1) * rhs.z + me(3, 1) * rhs.w);
+			vOut.z = TR(me(0, 2) * rhs.x + me(1, 2) * rhs.y + me(2, 2) * rhs.z + me(3, 2) * rhs.w);
+			vOut.w = TR(me(0, 3) * rhs.x + me(1, 3) * rhs.y + me(2, 3) * rhs.z + me(3, 3) * rhs.w);
+			return vOut;
+		}
+
 		// Transform a vector by this matrix
 		template<typename Q>
 		inline constexpr auto operator * (const olc::v_3d<Q>& v) const
