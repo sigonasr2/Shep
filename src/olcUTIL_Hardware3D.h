@@ -1212,7 +1212,7 @@ namespace olc::utils::hw3d
 				1.0f, 1.0f
 			};
 			// Invert that screen point into view space
-			olc::vf3d ray_projected = matProjectionInv * ray_parallel;
+			olc::vf3d ray_projected = mf4d(matProjectionInv) * vf3d(ray_parallel);
 			ray_projected.w = 0.0f;
 			// Invert into world space (relative to 0,0,0)
 			olc::vf3d ray_world = matViewInv * ray_projected;
