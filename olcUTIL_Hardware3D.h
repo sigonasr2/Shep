@@ -222,12 +222,6 @@ namespace olc
 			return this->max(v1).min(v2);
 		}
 
-		// Linearly interpolate between this vector, and another vector, given normalised parameter 't'
-		inline constexpr v_3d lerp(const v_3d& v1, const double t) const
-		{
-			return this->operator*(T(1.0 - t)) + (v1 * T(t));
-		}
-
 		// Compare if this vector is numerically equal to another
 		inline constexpr bool operator == (const v_3d& rhs) const
 		{
