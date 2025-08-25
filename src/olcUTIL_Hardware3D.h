@@ -874,13 +874,13 @@ namespace olc::utils::hw3d
 				{
 					// Line is a 3D normal					
 					s >> junk >> junk >> x >> y >> z;
-					norms.push_back({ -x, y, z });
+					norms.push_back({ x, y, z });
 				}
 				else
 				{
 					// Line is a 3D vertex
 					s >> junk >> x >> y >> z;
-					verts.push_back({ -x, y, z });
+					verts.push_back({ x, y, z });
 				}
 			}
 

@@ -100,11 +100,9 @@ bool ShepGame::OnUserCreate(){
 		AddGameObject({{float(i),0,0},{1,2,1},"nico-Trapper_512.png",MeshType::SPRITE});
 	}
 	AddGameObject({{0,0,0},{1,1,1},"space.png",MeshType::FLOOR});
-	AddGameObject({{0,0,0},{1,1,1},"building1.png",MeshType::OBJ});
+	AddGameObject({{-8,0,0},{1,1,1},"building1.png",MeshType::OBJ});
 
-	for(int i:std::ranges::iota_view(0,3)){
-		AddLight({{-4,-20,100},WHITE});
-	}
+	AddLight({{4,0,10},WHITE});
 
 	Clear(olc::VERY_DARK_BLUE);
 	HW3D_Projection(matProject.m);
@@ -181,8 +179,7 @@ bool ShepGame::OnUserUpdate(float fElapsedTime){
 		HW3D_DrawObject((matView * matWorld * scale).m, obj.GetSprite().Decal(), mesh.layout, mesh.pos, mesh.uv, mesh.col);
 	};
 	
-	HW3D_SetCullMode(olc::CullMode::CCW);
-	for(GameObject&obj:objects|std::views::filter([](const GameObject&obj){return obj.GetMeshType()==MeshType::FLOOR||obj.GetMeshType()==MeshType::SPRITE;})){
+	for(GameObject&obj:objects){
 		Render3DModel(obj);
 	}
 
@@ -195,12 +192,6 @@ bool ShepGame::OnUserUpdate(float fElapsedTime){
 		}
 	}
 
-	
-	HW3D_SetCullMode(olc::CullMode::CW);
-	for(GameObject&obj:objects|std::views::filter([](const GameObject&obj){return obj.GetMeshType()==MeshType::OBJ;})){
-		Render3DModel(obj);
-	}
-	
 	return true;
 }
 
