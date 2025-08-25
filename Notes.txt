@@ -35,3 +35,6 @@ Puzzle Aspect (Fitting shapes into engravings) (1 Day)
 Story, Dialog System, Shape Evolutions (1 Day)
 Playtesting / Tweaks / Bugfixes
 	Multiple Puzzle Variations
+
+
+Building 1: 8x6

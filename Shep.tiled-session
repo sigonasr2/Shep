@@ -7,14 +7,27 @@
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "bin/assets/maps/Collision.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "bin/assets/maps/Village.tsx": {
+            "scaleInEditor": 3
+        }
     },
-    "last.imagePath": "J:/Shep/assets/gfx/Cute RPG/Cute RPG - Village/Cute RPG - Village/16x16",
+    "last.externalTilesetPath": "J:/Shep/bin/assets/maps",
+    "last.imagePath": "J:/Shep/bin/assets/maps",
     "map.fixedSize": false,
+    "map.lastUsedFormat": "tmx",
     "openFiles": [
     ],
     "project": "Shep.tiled-project",
+    "property.type": "Buildings",
     "recentFiles": [
+        "bin/assets/maps/Village.tsx",
+        "bin/assets/maps/Collision.tsx"
     ],
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
         "height": 16,

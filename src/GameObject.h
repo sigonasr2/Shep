@@ -47,6 +47,7 @@ public:
 	const vf3d&GetPos()const;
 	const vf3d&GetScale()const;
 	const Renderable&GetSprite()const;
+	void SetAutoScale(const vf2d&unitDivision); //Takes the texture width/height and divides it by unitDivion then scales the Game Object accordingly. Useful for scaling tilemaps.
 private:
 	vf3d pos;
 	vf3d scale;

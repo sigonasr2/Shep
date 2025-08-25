@@ -10,5 +10,36 @@
     "properties": [
     ],
     "propertyTypes": [
+        {
+            "color": "#ff00ff7f",
+            "drawFill": true,
+            "id": 2,
+            "members": [
+                {
+                    "name": "Building Type",
+                    "propertyType": "Buildings",
+                    "type": "string",
+                    "value": "None"
+                }
+            ],
+            "name": "Building",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "id": 1,
+            "name": "Buildings",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "None",
+                "building1"
+            ],
+            "valuesAsFlags": false
+        }
     ]
 }

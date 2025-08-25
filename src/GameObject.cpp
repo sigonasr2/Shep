@@ -76,3 +76,10 @@ const vf3d&GameObject::GetScale()const{
 const Renderable&GameObject::GetSprite()const{
 	return ShepGame::Game().GetSpr(spriteMeshName);
 }
+
+void GameObject::SetAutoScale(const vf2d&unitDivision){
+	const Renderable&spr{GetSprite()};
+	const vf2d imgSize{spr.Sprite()->Size()};
+	scale.x=imgSize.x/unitDivision.x;
+	scale.z=imgSize.y/unitDivision.y;
+}

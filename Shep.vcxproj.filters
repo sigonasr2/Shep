@@ -62,5 +62,11 @@
     <ClInclude Include="src\MeshType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\TMXParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ObjectFlag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

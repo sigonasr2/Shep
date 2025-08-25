@@ -1,5 +1,6 @@
 #include "ShepGame.h"
 #include "GameSettings.h"
+#include "TMXParser.h"
 #include <ranges>
 
 ShepGame*ShepGame::game{nullptr};
@@ -19,12 +20,12 @@ void ShepGame::InitializeSpriteMesh(){
 	meshSpr.pos.push_back({ 0,1,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 0 }); meshSpr.col.push_back(olc::WHITE);
 }
 void ShepGame::InitializeFloorSpriteMesh(){
-	meshFloorSpr.pos.push_back({ 0,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
-	meshFloorSpr.pos.push_back({ 1,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
-	meshFloorSpr.pos.push_back({ 1,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
-	meshFloorSpr.pos.push_back({ 0,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.25 }); meshFloorSpr.col.push_back(olc::WHITE);
-	meshFloorSpr.pos.push_back({ 1,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.5, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
-	meshFloorSpr.pos.push_back({ 0,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0.25, 0.0 }); meshFloorSpr.col.push_back(olc::WHITE);
+	meshFloorSpr.pos.push_back({ 0,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0, 1 }); meshFloorSpr.col.push_back(olc::WHITE);
+	meshFloorSpr.pos.push_back({ 1,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 1, 1 }); meshFloorSpr.col.push_back(olc::WHITE);
+	meshFloorSpr.pos.push_back({ 1,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 1, 0 }); meshFloorSpr.col.push_back(olc::WHITE);
+	meshFloorSpr.pos.push_back({ 0,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0, 1 }); meshFloorSpr.col.push_back(olc::WHITE);
+	meshFloorSpr.pos.push_back({ 1,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 1, 0 }); meshFloorSpr.col.push_back(olc::WHITE);
+	meshFloorSpr.pos.push_back({ 0,0,0 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0, 0 }); meshFloorSpr.col.push_back(olc::WHITE);
 }
 
 void ShepGame::LoadObj(const std::string&filename){
@@ -36,12 +37,8 @@ void ShepGame::LoadObj(const std::string&filename){
 
 	std::string texFilename{filename.substr(0,filename.length()-4)+".png"};
 
-	if(SpriteExists(texFilename))meshes[filename].tex=GetSpr(texFilename).Decal();
+	if(assets.count(texFilename))meshes[filename].tex=GetSpr(texFilename).Decal();
 	else assets[texFilename].Load("assets/models/"+texFilename);
-}
-
-const bool ShepGame::SpriteExists(const std::string&filename)const{
-	return assets.count(filename);
 }
 
 void ShepGame::LoadSprite(const std::string&filename){
@@ -52,8 +49,17 @@ void ShepGame::LoadSprite(const std::string&filename){
 	assets[filename].Load("assets/gfx/"+filename);
 }
 
-void ShepGame::AddGameObject(const GameObject&newObj){
-	objects.emplace_back(newObj);
+GameObject&ShepGame::AddGameObject(const vf3d&pos,const vf3d&scale,const std::string&spriteMeshName,const MeshType&type){
+	switch(type){
+		case MeshType::FLOOR:
+		case MeshType::SPRITE:{
+			if(!assets.count(spriteMeshName))LoadSprite(spriteMeshName);
+		}break;
+		case MeshType::OBJ:{
+			if(!meshes.count(spriteMeshName.substr(0,spriteMeshName.length()-4)+".obj"))LoadObj("building1.obj");
+		}break;
+	}
+	return objects.emplace_back(pos,scale,spriteMeshName,type);
 }
 
 void ShepGame::AddLight(const Light&light){
@@ -91,16 +97,13 @@ bool ShepGame::OnUserCreate(){
 	InitializeSpriteMesh();
 	InitializeFloorSpriteMesh();
 
-	LoadObj("building1.obj");
-
-	LoadSprite("nico-Trapper_512.png");
-	LoadSprite("space.png");
+	LoadMap("Town1.tmx");
 
 	for(int i:std::ranges::iota_view(0,3)){
-		AddGameObject({{float(i),0,0},{1,2,1},"nico-Trapper_512.png",MeshType::SPRITE});
+		AddGameObject({float(i),0,0},{1,2,1},"nico-Trapper_512.png",MeshType::SPRITE);
 	}
-	AddGameObject({{0,0,0},{1,1,1},"space.png",MeshType::FLOOR});
-	AddGameObject({{-8,0,0},{1,1,1},"building1.png",MeshType::OBJ});
+	auto&town{AddGameObject({0,0,0},{1,1,1},"Town1.png",MeshType::FLOOR)};
+	town.SetAutoScale({16,16});
 
 	AddLight({{4,0,10},WHITE});
 
@@ -108,7 +111,41 @@ bool ShepGame::OnUserCreate(){
 	HW3D_Projection(matProject.m);
 	HW3D_EnableDepthTest(true);
 	HW3D_SetCullMode(olc::CullMode::CCW);
+
 	return true;
+}
+
+void ShepGame::LoadMap(const std::string&filename){
+	collisionTiles.clear();
+	objects.clear();
+	lights.clear();
+	TMXParser map{"assets/maps/"+filename};
+	std::vector<std::vector<int32_t>>tiles{map.GetData().GetLayers()[map.GetData().GetLayers().size()-1].tiles};
+	for(int y:std::ranges::iota_view(size_t(0),tiles.size())){
+		for(int x:std::ranges::iota_view(size_t(0),tiles[0].size())){
+			if(tiles[y][x]!=0)collisionTiles.emplace(x,y);
+		}
+	}
+	if(map.GetData().ZoneData.count("Building")>0){
+		const std::vector<ZoneData>&zones{map.GetData().ZoneData.at("Building")};
+		for(const ZoneData&zone:zones){
+			geom2d::rect<int>buildingZone{zone.zone};
+			vi2d spawnCoords{buildingZone.pos/map.GetData().GetMapData().TileSize};
+			vi2d size{buildingZone.size/map.GetData().GetMapData().TileSize};
+			for(const XMLTag&tag:zone.properties){
+				const auto&data{tag.data};
+				if(data.at("name")=="Building Type"){
+					AddGameObject({float(spawnCoords.x),0,float(spawnCoords.y)},{1,1,1},data.at("value")+".png",MeshType::OBJ);
+				}
+			}
+
+			for(int y:std::ranges::iota_view(spawnCoords.y,spawnCoords.y+size.y)){
+				for(int x:std::ranges::iota_view(spawnCoords.x,spawnCoords.x+size.x)){
+					collisionTiles.emplace(x,y);
+				}
+			}
+		}	
+	}
 }
 
 bool ShepGame::OnUserUpdate(float fElapsedTime){

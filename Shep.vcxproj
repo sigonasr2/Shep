@@ -371,11 +371,19 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       </SubType>
     </ClInclude>
     <ClInclude Include="src\miniaudio.h" />
+    <ClInclude Include="src\ObjectFlag.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="src\olcPGEX_MiniAudio.h" />
     <ClInclude Include="src\olcPixelGameEngine.h" />
     <ClInclude Include="src\olcUTIL_Geometry2D.h" />
     <ClInclude Include="src\olcUTIL_Hardware3D.h" />
     <ClInclude Include="src\ShepGame.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="src\TMXParser.h">
       <SubType>
       </SubType>
     </ClInclude>
