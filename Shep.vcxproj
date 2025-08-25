@@ -344,17 +344,41 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\GameObject.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="src\ShepGame.cpp" />
     <ClCompile Include="src\olcPGEX_MiniAudio.cpp" />
     <ClCompile Include="src\olcPixelGameEngine.cpp" />
     <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="src\GameSettings.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="src\Light.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="src\MeshType.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="src\miniaudio.h" />
     <ClInclude Include="src\olcPGEX_MiniAudio.h" />
     <ClInclude Include="src\olcPixelGameEngine.h" />
     <ClInclude Include="src\olcUTIL_Geometry2D.h" />
     <ClInclude Include="src\olcUTIL_Hardware3D.h" />
+    <ClInclude Include="src\ShepGame.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="src\util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

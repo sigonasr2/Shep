@@ -141,29 +141,53 @@ copy_data/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\copy_data.dir\build.make CMakeFiles/copy_data.dir/build
 .PHONY : copy_data/fast
 
-src/main.o: src/main.cpp.o
-.PHONY : src/main.o
+src/GameObject.o: src/GameObject.cpp.o
+.PHONY : src/GameObject.o
 
 # target to build an object file
-src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/main.cpp.o
-.PHONY : src/main.cpp.o
+src/GameObject.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/GameObject.cpp.o
+.PHONY : src/GameObject.cpp.o
 
-src/main.i: src/main.cpp.i
-.PHONY : src/main.i
+src/GameObject.i: src/GameObject.cpp.i
+.PHONY : src/GameObject.i
 
 # target to preprocess a source file
-src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/main.cpp.i
-.PHONY : src/main.cpp.i
+src/GameObject.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/GameObject.cpp.i
+.PHONY : src/GameObject.cpp.i
 
-src/main.s: src/main.cpp.s
-.PHONY : src/main.s
+src/GameObject.s: src/GameObject.cpp.s
+.PHONY : src/GameObject.s
 
 # target to generate assembly for a file
-src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/main.cpp.s
-.PHONY : src/main.cpp.s
+src/GameObject.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/GameObject.cpp.s
+.PHONY : src/GameObject.cpp.s
+
+src/ShepGame.o: src/ShepGame.cpp.o
+.PHONY : src/ShepGame.o
+
+# target to build an object file
+src/ShepGame.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/ShepGame.cpp.o
+.PHONY : src/ShepGame.cpp.o
+
+src/ShepGame.i: src/ShepGame.cpp.i
+.PHONY : src/ShepGame.i
+
+# target to preprocess a source file
+src/ShepGame.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/ShepGame.cpp.i
+.PHONY : src/ShepGame.cpp.i
+
+src/ShepGame.s: src/ShepGame.cpp.s
+.PHONY : src/ShepGame.s
+
+# target to generate assembly for a file
+src/ShepGame.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/ShepGame.cpp.s
+.PHONY : src/ShepGame.cpp.s
 
 src/olcPGEX_MiniAudio.o: src/olcPGEX_MiniAudio.cpp.o
 .PHONY : src/olcPGEX_MiniAudio.o
@@ -247,9 +271,12 @@ help:
 	@echo ... rebuild_cache
 	@echo ... copy_data
 	@echo ... Shep
-	@echo ... src/main.o
-	@echo ... src/main.i
-	@echo ... src/main.s
+	@echo ... src/GameObject.o
+	@echo ... src/GameObject.i
+	@echo ... src/GameObject.s
+	@echo ... src/ShepGame.o
+	@echo ... src/ShepGame.i
+	@echo ... src/ShepGame.s
 	@echo ... src/olcPGEX_MiniAudio.o
 	@echo ... src/olcPGEX_MiniAudio.i
 	@echo ... src/olcPGEX_MiniAudio.s

@@ -708,6 +708,7 @@ namespace olc::utils::hw3d
 		std::vector<std::array<float, 2>> uv;
 		std::vector<olc::Pixel> col;
 		olc::DecalStructure layout = olc::DecalStructure::LIST;
+		olc::Decal*tex{nullptr};
 	};
 
 
