@@ -41,12 +41,13 @@ void ShepGame::LoadObj(const std::string&filename){
 	else assets[texFilename].Load("assets/models/"+texFilename);
 }
 
-void ShepGame::LoadSprite(const std::string&filename){
+const Renderable&ShepGame::LoadSprite(const std::string&filename){
 	if(assets.count(filename)){
 		std::cout<<"WARNING! Duplicate sprite filename detected: "<<filename<<std::endl;
 		throw;
 	}
 	assets[filename].Load("assets/gfx/"+filename);
+	return assets.at(filename);
 }
 
 GameObject&ShepGame::AddGameObject(const vf3d&pos,const vf3d&scale,const GameObject::ObjectID&id,const std::string&spriteMeshName,const MeshType&type){
@@ -96,12 +97,12 @@ bool ShepGame::OnUserCreate(){
 
 	InitializeSpriteMesh();
 	InitializeFloorSpriteMesh();
+	LoadAnimations();
 
 	LoadMap("Town1.tmx");
 
-	AddGameObject({0,0,0},{1,2,1},GameObject::ObjectID::PLAYER,"nico-Trapper_512.png",MeshType::SPRITE);
-	auto&town{AddGameObject({0,0,0},{1,1,1},GameObject::ObjectID::DEFAULT,"Town1.png",MeshType::FLOOR)};
-	town.SetAutoScale({16,16});
+	auto&player{AddGameObject({0,0,0},{1,2,1},GameObject::ObjectID::PLAYER,"nico-trapper.png",MeshType::SPRITE)};
+	player.ApplyCharacterAnimation(29,SkinTone::TONE_2);
 
 	AddLight({{4,0,10},WHITE});
 
@@ -143,6 +144,33 @@ void ShepGame::LoadMap(const std::string&filename){
 				}
 			}
 		}	
+	}
+	auto&town{AddGameObject({0,0,0},{1,1,1},GameObject::ObjectID::DEFAULT,"../maps/"+filename.substr(0,filename.length()-3)+"png",MeshType::FLOOR)};
+	town.SetAutoScale({16,16});
+}
+
+std::unordered_map<AnimationState,Animate2D::FrameSequence>&ShepGame::GetCharacterAnimation(const uint8_t animInd,const SkinTone tone){
+	return characterAnimations.at((animInd-1)*4+int(tone));
+}
+
+void ShepGame::LoadAnimations(){
+	for(int i:std::ranges::iota_view(1,42)){
+		const Renderable&sheet{LoadSprite(std::format("Character_{:03}.png",i))};
+		for(int j:std::ranges::iota_view(0,4)){
+			std::unordered_map<AnimationState,Animate2D::FrameSequence>animation;
+			(*animation.insert({AnimationState::STAND_N,Animate2D::FrameSequence{0.2f,Animate2D::Style::Repeat}}).first).second.AddFrame(Animate2D::Frame{&sheet,{{24+j*96,24*3},{24,24}}});
+			(*animation.insert({AnimationState::STAND_E,Animate2D::FrameSequence{0.2f,Animate2D::Style::Repeat}}).first).second.AddFrame(Animate2D::Frame{&sheet,{{24+j*96,24*2},{24,24}}});
+			(*animation.insert({AnimationState::STAND_S,Animate2D::FrameSequence{0.2f,Animate2D::Style::Repeat}}).first).second.AddFrame(Animate2D::Frame{&sheet,{{24+j*96,24*0},{24,24}}});
+			(*animation.insert({AnimationState::STAND_W,Animate2D::FrameSequence{0.2f,Animate2D::Style::Repeat}}).first).second.AddFrame(Animate2D::Frame{&sheet,{{24+j*96,24*1},{24,24}}});
+			for(uint8_t row{};AnimationState&state:std::vector<AnimationState>{AnimationState::WALK_S,AnimationState::WALK_W,AnimationState::WALK_E,AnimationState::WALK_N}){
+				animation.insert({state,Animate2D::FrameSequence{0.2f,Animate2D::Style::Repeat}});
+				for(int k:std::ranges::iota_view(0,4)){
+					animation[state].AddFrame(Animate2D::Frame{&sheet,{{24*k+j*96,24*row},{24,24}}});
+				}
+				row++;
+			}
+			characterAnimations.emplace_back(std::move(animation));
+		}
 	}
 }
 
@@ -211,7 +239,7 @@ bool ShepGame::OnUserUpdate(float fElapsedTime){
 		matWorld.translate(vf3d{-0.5f,0,-0.5f}+pos+obj.GetPos());
 		mf4d scale;
 		scale.scale(obj.GetScale());
-		HW3D_DrawObject((matView * matWorld * scale).m, obj.GetSprite().Decal(), mesh.layout, mesh.pos, mesh.uv, mesh.col);
+		HW3D_DrawObject((matView * matWorld * scale).m, obj.GetSprite().Decal(), mesh.layout, mesh.pos, obj.GetUVs(), mesh.col);
 	};
 	
 	for(GameObject&obj:objects){

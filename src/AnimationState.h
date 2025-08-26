@@ -38,9 +38,19 @@ All rights reserved.
 #pragma once
 
 enum class AnimationState{
-	STAND,
+	STAND_N,
+	STAND_E,
+	STAND_S,
+	STAND_W,
 	WALK_N,
 	WALK_E,
 	WALK_S,
 	WALK_W,
+};
+
+enum class SkinTone{
+	TONE_1,
+	TONE_2,
+	TONE_3,
+	TONE_4,
 };

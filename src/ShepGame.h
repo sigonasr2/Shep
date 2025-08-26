@@ -57,7 +57,7 @@ public:
 	const hw3d::mesh&GetSpriteMesh()const;
 	static ShepGame&Game();
 	void LoadMap(const std::string&filename);
-	Animate2D::Animation<AnimationState>animation;
+	std::unordered_map<AnimationState,Animate2D::FrameSequence>&GetCharacterAnimation(const uint8_t animInd,const SkinTone tone); //Provide the EXACT index of the character you want from the character images in gfx. NOTE: They are 1-indexed! Use 1 for the first one etc.
 private:
 
 	static ShepGame*game;
@@ -77,7 +77,10 @@ private:
 	void InitializeSpriteMesh();
 	void InitializeFloorSpriteMesh();
 	void LoadObj(const std::string&filename); //filename is the base filename inside the assets/models directory. NOTE: Textures loaded from this function are also based from the assets/models directory and match the model name Ex. building1.obj expects building1.png.
-	void LoadSprite(const std::string&filename); //filename is the base filename inside the assets/gfx directory
+	const Renderable&LoadSprite(const std::string&filename); //filename is the base filename inside the assets/gfx directory
+	void LoadAnimations();
+
+	std::vector<std::unordered_map<AnimationState,Animate2D::FrameSequence>>characterAnimations;
 
 	virtual bool OnUserCreate()override;
 

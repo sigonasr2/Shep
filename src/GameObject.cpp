@@ -65,6 +65,34 @@ const hw3d::mesh&GameObject::GetMesh()const{
 	}
 }
 
+const std::vector<std::array<float,2>>GameObject::GetUVs()const{
+	if(anim){
+		switch(GetMeshType()){
+			case MeshType::FLOOR:
+			case MeshType::OBJ:{
+				std::cout<<"WARNING! Unimplemented animation code reached!"<<std::endl;
+				throw;
+			}break;
+			case MeshType::SPRITE:{
+				geom2d::rect<float>uv{animState.GetFrame(*anim).GetSourceUV()};
+				return std::vector<std::array<float,2>>{{
+					{{uv.pos.x,uv.pos.y+uv.size.y}},
+					{{uv.pos.x+uv.size.x,uv.pos.y+uv.size.y}},
+					{{uv.pos.x+uv.size.x,uv.pos.y}},
+					{{uv.pos.x,uv.pos.y+uv.size.y}},
+					{{uv.pos.x+uv.size.x,uv.pos.y}},
+					{{uv.pos.x,uv.pos.y}},
+				}};
+			}break;
+			default:{
+				std::cout<<"WARNING! Mesh Type is not any of the expected values! THIS SHOULD NOT BE HAPPENING!"<<std::endl;
+				throw;
+			}
+		}
+	}
+	else return GetMesh().uv;
+}
+
 const vf3d&GameObject::GetPos()const{
 	return pos;
 }
@@ -74,7 +102,8 @@ const vf3d&GameObject::GetScale()const{
 }
 
 const Renderable&GameObject::GetSprite()const{
-	return ShepGame::Game().GetSpr(spriteMeshName);
+	if(anim)return *animState.GetFrame(*anim).GetSourceImage();
+	else return ShepGame::Game().GetSpr(spriteMeshName);
 }
 
 void GameObject::SetAutoScale(const vf2d&unitDivision){
@@ -85,15 +114,47 @@ void GameObject::SetAutoScale(const vf2d&unitDivision){
 }
 
 void GameObject::Update(const float&fElapsedTime){
-	if(anim)ShepGame::Game().animation.UpdateState(*anim,fElapsedTime);
+	if(anim)animState.UpdateState(*anim,fElapsedTime);
 	auto&game{ShepGame::Game()};
 
 	switch(id){
 		case ObjectID::PLAYER:{
-			if(game.GetKey(Key::W).bHeld){pos.z-=fElapsedTime*GameSettings::playerSpd;}
-			if(game.GetKey(Key::A).bHeld){pos.x-=fElapsedTime*GameSettings::playerSpd;}
-			if(game.GetKey(Key::S).bHeld){pos.z+=fElapsedTime*GameSettings::playerSpd;}
-			if(game.GetKey(Key::D).bHeld){pos.x+=fElapsedTime*GameSettings::playerSpd;}
+			if(game.GetKey(Key::W).bHeld){
+				pos.z-=fElapsedTime*GameSettings::playerSpd;
+				if(anim)animState.ChangeState(*anim,AnimationState::WALK_N);
+			}
+			if(game.GetKey(Key::A).bHeld){
+				pos.x-=fElapsedTime*GameSettings::playerSpd;
+				if(anim)animState.ChangeState(*anim,AnimationState::WALK_W);
+			}
+			if(game.GetKey(Key::S).bHeld){
+				pos.z+=fElapsedTime*GameSettings::playerSpd;
+				if(anim)animState.ChangeState(*anim,AnimationState::WALK_S);
+			}
+			if(game.GetKey(Key::D).bHeld){
+				pos.x+=fElapsedTime*GameSettings::playerSpd;
+				if(anim)animState.ChangeState(*anim,AnimationState::WALK_E);
+			}
+			if(game.GetKey(Key::W).bReleased){
+				if(anim)animState.ChangeState(*anim,AnimationState::STAND_N);
+			}
+			if(game.GetKey(Key::A).bReleased){
+				if(anim)animState.ChangeState(*anim,AnimationState::STAND_W);
+			}
+			if(game.GetKey(Key::S).bReleased){
+				if(anim)animState.ChangeState(*anim,AnimationState::STAND_S);
+			}
+			if(game.GetKey(Key::D).bReleased){
+				if(anim)animState.ChangeState(*anim,AnimationState::STAND_E);
+			}
 		}break;
 	}
+}
+
+void GameObject::ApplyCharacterAnimation(const uint8_t animInd,const SkinTone tone){
+	std::unordered_map<AnimationState,Animate2D::FrameSequence>&animations{ShepGame::Game().GetCharacterAnimation(animInd,tone)};
+	for(AnimationState&state:std::vector<AnimationState>{AnimationState::STAND_S,AnimationState::STAND_W,AnimationState::STAND_E,AnimationState::STAND_N,AnimationState::WALK_S,AnimationState::WALK_W,AnimationState::WALK_E,AnimationState::WALK_N}){
+		animState.AddState(state,animations.at(state));
+	}
+	anim=Animate2D::AnimationState{};
 }

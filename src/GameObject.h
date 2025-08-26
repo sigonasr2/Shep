@@ -52,16 +52,18 @@ public:
 	void Update(const float&fElapsedTime);
 	const MeshType GetMeshType()const;
 	const hw3d::mesh&GetMesh()const;
+	const std::vector<std::array<float,2>>GetUVs()const;
 	const vf3d&GetPos()const;
 	const vf3d&GetScale()const;
 	const Renderable&GetSprite()const;
 	void SetAutoScale(const vf2d&unitDivision); //Takes the texture width/height and divides it by unitDivion then scales the Game Object accordingly. Useful for scaling tilemaps.
+	void ApplyCharacterAnimation(const uint8_t animInd,const SkinTone tone);
 private:
 	vf3d pos;
 	vf3d scale;
 	ObjectID id;
 	std::string spriteMeshName;
 	MeshType type;
-	AnimationState state;
 	std::optional<Animate2D::AnimationState>anim;
+	Animate2D::Animation<AnimationState>animState;
 };
