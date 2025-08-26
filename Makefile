@@ -165,6 +165,30 @@ src/GameObject.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/GameObject.cpp.s
 .PHONY : src/GameObject.cpp.s
 
+src/Player.o: src/Player.cpp.o
+.PHONY : src/Player.o
+
+# target to build an object file
+src/Player.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Player.cpp.o
+.PHONY : src/Player.cpp.o
+
+src/Player.i: src/Player.cpp.i
+.PHONY : src/Player.i
+
+# target to preprocess a source file
+src/Player.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Player.cpp.i
+.PHONY : src/Player.cpp.i
+
+src/Player.s: src/Player.cpp.s
+.PHONY : src/Player.s
+
+# target to generate assembly for a file
+src/Player.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Player.cpp.s
+.PHONY : src/Player.cpp.s
+
 src/ShepGame.o: src/ShepGame.cpp.o
 .PHONY : src/ShepGame.o
 
@@ -274,6 +298,9 @@ help:
 	@echo ... src/GameObject.o
 	@echo ... src/GameObject.i
 	@echo ... src/GameObject.s
+	@echo ... src/Player.o
+	@echo ... src/Player.i
+	@echo ... src/Player.s
 	@echo ... src/ShepGame.o
 	@echo ... src/ShepGame.i
 	@echo ... src/ShepGame.s

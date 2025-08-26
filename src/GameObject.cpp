@@ -123,34 +123,7 @@ void GameObject::Update(const float&fElapsedTime){
 
 	switch(id){
 		case ObjectID::PLAYER:{
-			if(game.GetKey(Key::W).bHeld){
-				pos.z-=fElapsedTime*GameSettings::PLAYER_SPD;
-				if(anim)animState.ChangeState(*anim,AnimationState::WALK_N);
-			}
-			if(game.GetKey(Key::A).bHeld){
-				pos.x-=fElapsedTime*GameSettings::PLAYER_SPD;
-				if(anim)animState.ChangeState(*anim,AnimationState::WALK_W);
-			}
-			if(game.GetKey(Key::S).bHeld){
-				pos.z+=fElapsedTime*GameSettings::PLAYER_SPD;
-				if(anim)animState.ChangeState(*anim,AnimationState::WALK_S);
-			}
-			if(game.GetKey(Key::D).bHeld){
-				pos.x+=fElapsedTime*GameSettings::PLAYER_SPD;
-				if(anim)animState.ChangeState(*anim,AnimationState::WALK_E);
-			}
-			if(game.GetKey(Key::W).bReleased){
-				if(anim)animState.ChangeState(*anim,AnimationState::STAND_N);
-			}
-			if(game.GetKey(Key::A).bReleased){
-				if(anim)animState.ChangeState(*anim,AnimationState::STAND_W);
-			}
-			if(game.GetKey(Key::S).bReleased){
-				if(anim)animState.ChangeState(*anim,AnimationState::STAND_S);
-			}
-			if(game.GetKey(Key::D).bReleased){
-				if(anim)animState.ChangeState(*anim,AnimationState::STAND_E);
-			}
+			Player::Update(*this,fElapsedTime);
 		}break;
 	}
 }

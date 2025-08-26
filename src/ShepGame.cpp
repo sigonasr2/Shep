@@ -14,10 +14,10 @@ ShepGame::ShepGame()
 void ShepGame::InitializeSpriteMesh(){
 	meshSpr.pos.push_back({ 0,0,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 1 }); meshSpr.col.push_back(olc::WHITE);
 	meshSpr.pos.push_back({ 1,0,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 1 }); meshSpr.col.push_back(olc::WHITE);
-	meshSpr.pos.push_back({ 1,1,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 0 }); meshSpr.col.push_back(olc::WHITE);
+	meshSpr.pos.push_back({ 1,0.6,0.0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 0 }); meshSpr.col.push_back(olc::WHITE);
 	meshSpr.pos.push_back({ 0,0,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 1 }); meshSpr.col.push_back(olc::WHITE);
-	meshSpr.pos.push_back({ 1,1,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 0 }); meshSpr.col.push_back(olc::WHITE);
-	meshSpr.pos.push_back({ 0,1,0.5 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 0 }); meshSpr.col.push_back(olc::WHITE);
+	meshSpr.pos.push_back({ 1,0.6,0.0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 1, 0 }); meshSpr.col.push_back(olc::WHITE);
+	meshSpr.pos.push_back({ 0,0.6,0.0 }); meshSpr.norm.push_back({ 0, 0, -1, 0 }); meshSpr.uv.push_back({ 0, 0 }); meshSpr.col.push_back(olc::WHITE);
 }
 void ShepGame::InitializeFloorSpriteMesh(){
 	meshFloorSpr.pos.push_back({ 0,0,1 }); meshFloorSpr.norm.push_back({ 0, 1, 0, 0 }); meshFloorSpr.uv.push_back({ 0, 1 }); meshFloorSpr.col.push_back(olc::WHITE);
@@ -103,6 +103,8 @@ bool ShepGame::OnUserCreate(){
 
 	auto&player{AddGameObject({0,0,0},{1,2,1},GameObject::ObjectID::PLAYER,"nico-trapper.png",MeshType::SPRITE)};
 	player.ApplyCharacterAnimation(29,SkinTone::TONE_2);
+
+	AddGameObject({9,0,10},{1,2,1},GameObject::ObjectID::DEFAULT,"nico-trapper.png",MeshType::SPRITE).ApplyCharacterAnimation(32,SkinTone::TONE_3);
 
 	AddLight({{4,0,10},WHITE});
 

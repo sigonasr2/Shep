@@ -35,40 +35,38 @@ Project (www.freetype.org). Please see LICENSE_FT.txt for more information.
 All rights reserved.
 */
 #pragma endregion
-#pragma once
 
-#include "MeshType.h"
-#include "olcUTIL_Animate2D.h"
-#include "AnimationState.h"
+#include "ShepGame.h"
+#include "GameSettings.h"
 
-class GameObject{
-public:
-	enum class ObjectID{
-		DEFAULT,
-		PLAYER,
-	};
-
-	GameObject(const vf3d&pos,const vf3d&scale,const ObjectID&id,const std::string&spriteMeshName,const MeshType&type);
-	void Update(const float&fElapsedTime);
-	const ObjectID GetID()const;
-	const MeshType GetMeshType()const;
-	const hw3d::mesh&GetMesh()const;
-	const std::vector<std::array<float,2>>GetUVs()const;
-	const vf3d&GetPos()const;
-	const vf3d&GetScale()const;
-	const Renderable&GetSprite()const;
-	void SetAutoScale(const vf2d&unitDivision); //Takes the texture width/height and divides it by unitDivion then scales the Game Object accordingly. Useful for scaling tilemaps.
-	void ApplyCharacterAnimation(const uint8_t animInd,const SkinTone tone);
-
-	struct Player{
-		static void Update(GameObject&self,const float&fElapsedTime);
-	};
-private:
-	vf3d pos;
-	vf3d scale;
-	ObjectID id;
-	std::string spriteMeshName;
-	MeshType type;
-	std::optional<Animate2D::AnimationState>anim;
-	Animate2D::Animation<AnimationState>animState;
-};
+void GameObject::Player::Update(GameObject&self,const float&fElapsedTime){
+	ShepGame&game{ShepGame::Game()};
+	if(game.GetKey(Key::W).bHeld){
+		self.pos.z-=fElapsedTime*GameSettings::PLAYER_SPD;
+		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::WALK_N);
+	}
+	if(game.GetKey(Key::A).bHeld){
+		self.pos.x-=fElapsedTime*GameSettings::PLAYER_SPD;
+		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::WALK_W);
+	}
+	if(game.GetKey(Key::S).bHeld){
+		self.pos.z+=fElapsedTime*GameSettings::PLAYER_SPD;
+		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::WALK_S);
+	}
+	if(game.GetKey(Key::D).bHeld){
+		self.pos.x+=fElapsedTime*GameSettings::PLAYER_SPD;
+		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::WALK_E);
+	}
+	if(game.GetKey(Key::W).bReleased){
+		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::STAND_N);
+	}
+	if(game.GetKey(Key::A).bReleased){
+		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::STAND_W);
+	}
+	if(game.GetKey(Key::S).bReleased){
+		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::STAND_S);
+	}
+	if(game.GetKey(Key::D).bReleased){
+		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::STAND_E);
+	}
+}
