@@ -1,6 +1,7 @@
 #include "ShepGame.h"
 #include "GameSettings.h"
 #include "TMXParser.h"
+#include "Theme.h"
 #include <ranges>
 
 ShepGame*ShepGame::game{nullptr};
@@ -82,6 +83,8 @@ const hw3d::mesh&ShepGame::GetSpriteMesh()const{
 }
 
 bool ShepGame::OnUserCreate(){
+	Theme::Initialize();
+
 	float fAspect = float(GetScreenSize().y) / float(GetScreenSize().x);
 	float S = 1.0f / (tan(3.14159f * 0.25f));
 	float f = 1000.0f;
@@ -256,6 +259,8 @@ bool ShepGame::OnUserUpdate(float fElapsedTime){
 			HW3D_DrawObject((matView*matWorld).m,nullptr,meshSpr.layout,meshSpr.pos,meshSpr.uv,lightCol);
 		}
 	}
+
+	Theme::DrawWindow({{20,20},{40,40}});
 
 	return true;
 }

@@ -97,9 +97,24 @@ PWR = Move Base Power
 ATK = Shep Attack
 MAX(PWR+PWR*(ATK*0.01)-PWR*(DEF*0.01),1)
 
+Select a character:
 
-Tackle		20	2
-Rush		30	2
-Flash Hit	20	3	Has priority
-Scratch		20	2
-Slash		40	3
+
+Welcome! You are about to begin a great journey of your own.
+
+This land is inhabited by creatures called Shep! Where they come from and their
+mysteries have yet to be discovered. Why are they here? 
+
+Speaking of, what is your name?
+
+Your adventure is about to unfold, come by my lab when you are ready! I will see you there.
+
+
+Start in house, go downstairs. Receive a Shapedia. As you collect species you can review them.
+
+Start Menu has:
+Shapedia
+(Name) - Your profile shows Ruin Shard Count, Geometry Star count, play time, and number of Shep caught.
+Save
+Options - UI color scheme, text speed, sound effect volume, music volume, controller scheme (a/b switch) Or L button mode
+

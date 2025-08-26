@@ -356,6 +356,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="src\ShepGame.cpp" />
     <ClCompile Include="src\olcPGEX_MiniAudio.cpp" />
     <ClCompile Include="src\olcPixelGameEngine.cpp" />
+    <ClCompile Include="src\Theme.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -393,6 +397,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="src\olcUTIL_Geometry2D.h" />
     <ClInclude Include="src\olcUTIL_Hardware3D.h" />
     <ClInclude Include="src\ShepGame.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="src\Theme.h">
       <SubType>
       </SubType>
     </ClInclude>

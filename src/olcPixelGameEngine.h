@@ -1483,7 +1483,7 @@ namespace olc
 		void ClearBuffer(Pixel p, bool bDepth = true);
 		// Returns the font image
 		olc::Sprite* GetFontSprite();
-
+		void SetFontSprite(std::string_view newFontFile);
 		// Clip a line segment to visible area
 		bool ClipLineToScreen(olc::vi2d& in_p1, olc::vi2d& in_p2);
 
@@ -2847,6 +2847,11 @@ namespace olc
 		return fontRenderable.Sprite();
 	}
 
+	
+	void PixelGameEngine::SetFontSprite(std::string_view newFontFile)
+	{ fontRenderable.Load(std::string(newFontFile)); }
+
+
 	bool PixelGameEngine::ClipLineToScreen(olc::vi2d& in_p1, olc::vi2d& in_p2)
 	{
 		// https://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland_algorithm
@@ -3831,18 +3836,18 @@ namespace olc
 		{
 			if (c == '\n')
 			{
-				spos.x = 0; spos.y += 8.0f * scale.y;
+				spos.x = 0; spos.y += 16.0f * scale.y;
 			}
 			else if (c == '\t')
 			{
-				spos.x += 8.0f * float(nTabSizeInSpaces) * scale.x;
+				spos.x += 16.0f * float(nTabSizeInSpaces) * scale.x;
 			}
 			else
 			{
 				int32_t ox = (c - 32) % 16;
 				int32_t oy = (c - 32) / 16;
-				DrawPartialDecal(pos + spos, fontRenderable.Decal(), { float(ox) * 8.0f, float(oy) * 8.0f }, { 8.0f, 8.0f }, scale, col);
-				spos.x += 8.0f * scale.x;
+				DrawPartialDecal(pos + spos, fontRenderable.Decal(), { float(ox) * 16.0f, float(oy) * 16.0f }, { 16.0f, 16.0f }, scale, col);
+				spos.x += 16.0f * scale.x;
 			}
 		}
 	}
@@ -3854,17 +3859,17 @@ namespace olc
 		{
 			if (c == '\n')
 			{
-				spos.x = 0; spos.y += 8.0f * scale.y;
+				spos.x = 0; spos.y += 16.0f * scale.y;
 			}
 			else if (c == '\t')
 			{
-				spos.x += 8.0f * float(nTabSizeInSpaces) * scale.x;
+				spos.x += 16.0f * float(nTabSizeInSpaces) * scale.x;
 			}
 			else
 			{
 				int32_t ox = (c - 32) % 16;
 				int32_t oy = (c - 32) / 16;
-				DrawPartialDecal(pos + spos, fontRenderable.Decal(), { float(ox) * 8.0f + float(vFontSpacing[c - 32].x), float(oy) * 8.0f }, { float(vFontSpacing[c - 32].y), 8.0f }, scale, col);
+				DrawPartialDecal(pos + spos, fontRenderable.Decal(), { float(ox) * 16.0f + float(vFontSpacing[c - 32].x), float(oy) * 16.0f }, { float(vFontSpacing[c - 32].y), 16.0f }, scale, col);
 				spos.x += float(vFontSpacing[c - 32].y) * scale.x;
 			}
 		}
@@ -3877,18 +3882,18 @@ namespace olc
 		{
 			if (c == '\n')
 			{
-				spos.x = center.x; spos.y -= 8.0f;
+				spos.x = center.x; spos.y -= 16.0f;
 			}
 			else if (c == '\t')
 			{
-				spos.x += 8.0f * float(nTabSizeInSpaces) * scale.x;
+				spos.x += 16.0f * float(nTabSizeInSpaces) * scale.x;
 			}
 			else
 			{
 				int32_t ox = (c - 32) % 16;
 				int32_t oy = (c - 32) / 16;
-				DrawPartialRotatedDecal(pos, fontRenderable.Decal(), fAngle, spos, { float(ox) * 8.0f, float(oy) * 8.0f }, { 8.0f, 8.0f }, scale, col);
-				spos.x -= 8.0f;
+				DrawPartialRotatedDecal(pos, fontRenderable.Decal(), fAngle, spos, { float(ox) * 16.0f, float(oy) * 16.0f }, { 16.0f, 16.0f }, scale, col);
+				spos.x -= 16.0f;
 			}
 		}
 	}
@@ -3900,11 +3905,11 @@ namespace olc
 		{
 			if (c == '\n')
 			{
-				spos.x = center.x; spos.y -= 8.0f;
+				spos.x = center.x; spos.y -= 16.0f;
 			}
 			else if (c == '\t')
 			{
-				spos.x += 8.0f * float(nTabSizeInSpaces) * scale.x;
+				spos.x += 16.0f * float(nTabSizeInSpaces) * scale.x;
 			}
 			else
 			{
@@ -3928,7 +3933,7 @@ namespace olc
 			size.x = std::max(size.x, pos.x);
 			size.y = std::max(size.y, pos.y);
 		}
-		return size * 8;
+		return size * 16;
 	}
 
 	void PixelGameEngine::DrawString(const olc::vi2d& pos, const std::string& sText, Pixel col, uint32_t scale)
@@ -3951,11 +3956,11 @@ namespace olc
 		{
 			if (c == '\n')
 			{
-				sx = 0; sy += 8 * scale;
+				sx = 0; sy += 16 * scale;
 			}
 			else if (c == '\t')
 			{
-				sx += 8 * nTabSizeInSpaces * scale;
+				sx += 16 * nTabSizeInSpaces * scale;
 			}
 			else
 			{
@@ -3964,21 +3969,21 @@ namespace olc
 
 				if (scale > 1)
 				{
-					for (uint32_t i = 0; i < 8; i++)
-						for (uint32_t j = 0; j < 8; j++)
-							if (fontRenderable.Sprite()->GetPixel(i + ox * 8, j + oy * 8).r > 0)
+					for (uint32_t i = 0; i < 16; i++)
+						for (uint32_t j = 0; j < 16; j++)
+							if (fontRenderable.Sprite()->GetPixel(i + ox * 16, j + oy * 16).r > 0)
 								for (uint32_t is = 0; is < scale; is++)
 									for (uint32_t js = 0; js < scale; js++)
 										Draw(x + sx + (i * scale) + is, y + sy + (j * scale) + js, col);
 				}
 				else
 				{
-					for (uint32_t i = 0; i < 8; i++)
-						for (uint32_t j = 0; j < 8; j++)
-							if (fontRenderable.Sprite()->GetPixel(i + ox * 8, j + oy * 8).r > 0)
+					for (uint32_t i = 0; i < 16; i++)
+						for (uint32_t j = 0; j < 16; j++)
+							if (fontRenderable.Sprite()->GetPixel(i + ox * 16, j + oy * 16).r > 0)
 								Draw(x + sx + i, y + sy + j, col);
 				}
-				sx += 8 * scale;
+				sx += 16 * scale;
 			}
 		}
 		SetPixelMode(m);
@@ -3991,13 +3996,13 @@ namespace olc
 		for (auto c : s)
 		{
 			if (c == '\n') { pos.y += 1;  pos.x = 0; }
-			else if (c == '\t') { pos.x += nTabSizeInSpaces * 8; }
+			else if (c == '\t') { pos.x += nTabSizeInSpaces * 16; }
 			else pos.x += vFontSpacing[c - 32].y;
 			size.x = std::max(size.x, pos.x);
 			size.y = std::max(size.y, pos.y);
 		}
 
-		size.y *= 8;
+		size.y *= 16;
 		return size;
 	}
 
@@ -4021,11 +4026,11 @@ namespace olc
 		{
 			if (c == '\n')
 			{
-				sx = 0; sy += 8 * scale;
+				sx = 0; sy += 16 * scale;
 			}
 			else if (c == '\t')
 			{
-				sx += 8 * nTabSizeInSpaces * scale;
+				sx += 16 * nTabSizeInSpaces * scale;
 			}
 			else
 			{
@@ -4035,8 +4040,8 @@ namespace olc
 				if (scale > 1)
 				{
 					for (int32_t i = 0; i < vFontSpacing[c - 32].y; i++)
-						for (int32_t j = 0; j < 8; j++)
-							if (fontRenderable.Sprite()->GetPixel(i + ox * 8 + vFontSpacing[c - 32].x, j + oy * 8).r > 0)
+						for (int32_t j = 0; j < 16; j++)
+							if (fontRenderable.Sprite()->GetPixel(i + ox * 16 + vFontSpacing[c - 32].x, j + oy * 16).r > 0)
 								for (int32_t is = 0; is < int(scale); is++)
 									for (int32_t js = 0; js < int(scale); js++)
 										Draw(x + sx + (i * scale) + is, y + sy + (j * scale) + js, col);
@@ -4044,8 +4049,8 @@ namespace olc
 				else
 				{
 					for (int32_t i = 0; i < vFontSpacing[c - 32].y; i++)
-						for (int32_t j = 0; j < 8; j++)
-							if (fontRenderable.Sprite()->GetPixel(i + ox * 8 + vFontSpacing[c - 32].x, j + oy * 8).r > 0)
+						for (int32_t j = 0; j < 16; j++)
+							if (fontRenderable.Sprite()->GetPixel(i + ox * 16 + vFontSpacing[c - 32].x, j + oy * 16).r > 0)
 								Draw(x + sx + i, y + sy + j, col);
 				}
 				sx += vFontSpacing[c - 32].y * scale;
@@ -4808,13 +4813,12 @@ namespace olc
 		fontRenderable.Decal()->Update();
 
 		constexpr std::array<uint8_t, 96> vSpacing = { {
-			0x03,0x25,0x16,0x08,0x07,0x08,0x08,0x04,0x15,0x15,0x08,0x07,0x15,0x07,0x24,0x08,
-			0x08,0x17,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x24,0x15,0x06,0x07,0x16,0x17,
-			0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x08,0x17,0x08,0x08,0x17,0x08,0x08,0x08,
-			0x08,0x08,0x08,0x08,0x17,0x08,0x08,0x08,0x08,0x17,0x08,0x15,0x08,0x15,0x08,0x08,
-			0x24,0x18,0x17,0x17,0x17,0x17,0x17,0x17,0x17,0x33,0x17,0x17,0x33,0x18,0x17,0x17,
-			0x17,0x17,0x17,0x17,0x07,0x17,0x17,0x18,0x18,0x17,0x17,0x07,0x33,0x07,0x08,0x00, } };
-
+			0x03,0x02,0x04,0x03,0x06,0x0B,0x0A,0x03,0x04,0x04,0x04,0x06,0x03,0x03,0x03,0x05,
+			0x06,0x05,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x02,0x03,0x05,0x06,0x05,0x05,
+			0x05,0x07,0x06,0x06,0x06,0x05,0x05,0x06,0x06,0x02,0x05,0x06,0x05,0x08,0x06,0x06,
+			0x06,0x06,0x06,0x06,0x06,0x06,0x07,0x08,0x06,0x06,0x05,0x06,0x05,0x07,0x05,0x06,
+			0x03,0x06,0x05,0x05,0x05,0x05,0x04,0x05,0x05,0x02,0x03,0x05,0x02,0x08,0x05,0x05,
+			0x05,0x05,0x04,0x05,0x04,0x05,0x06,0x08,0x05,0x05,0x05,0x03,0x06,0x03,0x07,0x08, } };
 		for (auto c : vSpacing) vFontSpacing.push_back({ c >> 4, c & 15 });
 
 		// UK Standard Layout

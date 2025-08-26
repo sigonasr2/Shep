@@ -213,6 +213,30 @@ src/ShepGame.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/ShepGame.cpp.s
 .PHONY : src/ShepGame.cpp.s
 
+src/Theme.o: src/Theme.cpp.o
+.PHONY : src/Theme.o
+
+# target to build an object file
+src/Theme.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Theme.cpp.o
+.PHONY : src/Theme.cpp.o
+
+src/Theme.i: src/Theme.cpp.i
+.PHONY : src/Theme.i
+
+# target to preprocess a source file
+src/Theme.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Theme.cpp.i
+.PHONY : src/Theme.cpp.i
+
+src/Theme.s: src/Theme.cpp.s
+.PHONY : src/Theme.s
+
+# target to generate assembly for a file
+src/Theme.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Theme.cpp.s
+.PHONY : src/Theme.cpp.s
+
 src/olcPGEX_MiniAudio.o: src/olcPGEX_MiniAudio.cpp.o
 .PHONY : src/olcPGEX_MiniAudio.o
 
@@ -304,6 +328,9 @@ help:
 	@echo ... src/ShepGame.o
 	@echo ... src/ShepGame.i
 	@echo ... src/ShepGame.s
+	@echo ... src/Theme.o
+	@echo ... src/Theme.i
+	@echo ... src/Theme.s
 	@echo ... src/olcPGEX_MiniAudio.o
 	@echo ... src/olcPGEX_MiniAudio.i
 	@echo ... src/olcPGEX_MiniAudio.s
