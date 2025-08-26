@@ -37,10 +37,14 @@ All rights reserved.
 #pragma endregion
 #pragma once
 
+#include "olcUTIL_Hardware3D.h"
+
 class GameSettings{
 public:
 	inline static constexpr bool LIGHTS_VISIBLE{true};
 	inline static constexpr bool DEBUG_CAMERA{true};
 
-	inline static constexpr float playerSpd{5.f};
+	inline static constexpr float PLAYER_SPD{5.f};
+	inline static vf3d CAMERA_FOLLOW_POS{0,-3.77,-3.2};
+	inline static float CAMERA_TILT{51.35};
 };

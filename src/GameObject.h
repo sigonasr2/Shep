@@ -50,6 +50,7 @@ public:
 
 	GameObject(const vf3d&pos,const vf3d&scale,const ObjectID&id,const std::string&spriteMeshName,const MeshType&type);
 	void Update(const float&fElapsedTime);
+	const ObjectID GetID()const;
 	const MeshType GetMeshType()const;
 	const hw3d::mesh&GetMesh()const;
 	const std::vector<std::array<float,2>>GetUVs()const;

@@ -84,8 +84,7 @@ private:
 
 	virtual bool OnUserCreate()override;
 
-	vf3d pos{0,-3.04,-10};
-	float rot{28.9};
+	vf3d pos{};
 
 	virtual bool OnUserUpdate(float fElapsedTime)override;
 };

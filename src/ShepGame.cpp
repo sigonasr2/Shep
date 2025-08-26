@@ -176,25 +176,25 @@ void ShepGame::LoadAnimations(){
 
 bool ShepGame::OnUserUpdate(float fElapsedTime){
 	using namespace olc;
-
+	
 	if(GameSettings::DEBUG_CAMERA){
-		olc::mf4d m1, m2;
-		if(GetKey(olc::Key::RIGHT).bHeld)pos.x+=fElapsedTime*5;
-		if(GetKey(olc::Key::LEFT).bHeld)pos.x-=fElapsedTime*5;
-		if(GetKey(olc::Key::UP).bHeld)pos.y-=fElapsedTime*5;
-		if(GetKey(olc::Key::DOWN).bHeld)pos.y+=fElapsedTime*5;
-		if(GetKey(olc::Key::PGUP).bHeld)pos.z-=fElapsedTime*5;
-		if(GetKey(olc::Key::PGDN).bHeld)pos.z+=fElapsedTime*5;
-		if(GetKey(olc::Key::HOME).bHeld)rot-=fElapsedTime*5;
-		if(GetKey(olc::Key::END).bHeld)rot+=fElapsedTime*5;
-		m2.rotateX(util::degToRad(rot));
-		
-		matView = m2 * m1;
+		if(GetKey(olc::Key::RIGHT).bHeld)GameSettings::CAMERA_FOLLOW_POS.x+=fElapsedTime*5;
+		if(GetKey(olc::Key::LEFT).bHeld)GameSettings::CAMERA_FOLLOW_POS.x-=fElapsedTime*5;
+		if(GetKey(olc::Key::UP).bHeld)GameSettings::CAMERA_FOLLOW_POS.y-=fElapsedTime*5;
+		if(GetKey(olc::Key::DOWN).bHeld)GameSettings::CAMERA_FOLLOW_POS.y+=fElapsedTime*5;
+		if(GetKey(olc::Key::PGUP).bHeld)GameSettings::CAMERA_FOLLOW_POS.z-=fElapsedTime*5;
+		if(GetKey(olc::Key::PGDN).bHeld)GameSettings::CAMERA_FOLLOW_POS.z+=fElapsedTime*5;
+		if(GetKey(olc::Key::HOME).bHeld)GameSettings::CAMERA_TILT-=fElapsedTime*5;
+		if(GetKey(olc::Key::END).bHeld)GameSettings::CAMERA_TILT+=fElapsedTime*5;
 	}
+	matView.rotateX(util::degToRad(GameSettings::CAMERA_TILT));
 
 	// Clear background
 	ClearBuffer(olc::BLANK, true);
-		
+
+	for(const GameObject&obj:objects|std::views::filter([](const GameObject&obj){return obj.GetID()==GameObject::ObjectID::PLAYER;})){
+		pos=GameSettings::CAMERA_FOLLOW_POS-obj.GetPos();
+	}
 		
 	const std::vector<std::reference_wrapper<utils::hw3d::mesh>>meshes{
 		meshSpr,meshFloorSpr
@@ -232,7 +232,6 @@ bool ShepGame::OnUserUpdate(float fElapsedTime){
 	for(utils::hw3d::mesh&meshRef:meshes){
 		UpdateMeshLighting(meshRef);
 	}
-	
 
 	const auto Render3DModel=[this](const GameObject&obj){
 		const hw3d::mesh&mesh{obj.GetMesh()};

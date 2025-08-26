@@ -47,6 +47,10 @@ const MeshType GameObject::GetMeshType()const{
 	return type;
 }
 
+const GameObject::ObjectID GameObject::GetID()const{
+	return id;
+}
+
 const hw3d::mesh&GameObject::GetMesh()const{
 	switch(GetMeshType()){
 		case MeshType::FLOOR:{
@@ -120,19 +124,19 @@ void GameObject::Update(const float&fElapsedTime){
 	switch(id){
 		case ObjectID::PLAYER:{
 			if(game.GetKey(Key::W).bHeld){
-				pos.z-=fElapsedTime*GameSettings::playerSpd;
+				pos.z-=fElapsedTime*GameSettings::PLAYER_SPD;
 				if(anim)animState.ChangeState(*anim,AnimationState::WALK_N);
 			}
 			if(game.GetKey(Key::A).bHeld){
-				pos.x-=fElapsedTime*GameSettings::playerSpd;
+				pos.x-=fElapsedTime*GameSettings::PLAYER_SPD;
 				if(anim)animState.ChangeState(*anim,AnimationState::WALK_W);
 			}
 			if(game.GetKey(Key::S).bHeld){
-				pos.z+=fElapsedTime*GameSettings::playerSpd;
+				pos.z+=fElapsedTime*GameSettings::PLAYER_SPD;
 				if(anim)animState.ChangeState(*anim,AnimationState::WALK_S);
 			}
 			if(game.GetKey(Key::D).bHeld){
-				pos.x+=fElapsedTime*GameSettings::playerSpd;
+				pos.x+=fElapsedTime*GameSettings::PLAYER_SPD;
 				if(anim)animState.ChangeState(*anim,AnimationState::WALK_E);
 			}
 			if(game.GetKey(Key::W).bReleased){
