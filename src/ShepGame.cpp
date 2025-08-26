@@ -49,7 +49,7 @@ void ShepGame::LoadSprite(const std::string&filename){
 	assets[filename].Load("assets/gfx/"+filename);
 }
 
-GameObject&ShepGame::AddGameObject(const vf3d&pos,const vf3d&scale,const std::string&spriteMeshName,const MeshType&type){
+GameObject&ShepGame::AddGameObject(const vf3d&pos,const vf3d&scale,const GameObject::ObjectID&id,const std::string&spriteMeshName,const MeshType&type){
 	switch(type){
 		case MeshType::FLOOR:
 		case MeshType::SPRITE:{
@@ -59,7 +59,7 @@ GameObject&ShepGame::AddGameObject(const vf3d&pos,const vf3d&scale,const std::st
 			if(!meshes.count(spriteMeshName.substr(0,spriteMeshName.length()-4)+".obj"))LoadObj("building1.obj");
 		}break;
 	}
-	return objects.emplace_back(pos,scale,spriteMeshName,type);
+	return objects.emplace_back(pos,scale,id,spriteMeshName,type);
 }
 
 void ShepGame::AddLight(const Light&light){
@@ -99,10 +99,8 @@ bool ShepGame::OnUserCreate(){
 
 	LoadMap("Town1.tmx");
 
-	for(int i:std::ranges::iota_view(0,3)){
-		AddGameObject({float(i),0,0},{1,2,1},"nico-Trapper_512.png",MeshType::SPRITE);
-	}
-	auto&town{AddGameObject({0,0,0},{1,1,1},"Town1.png",MeshType::FLOOR)};
+	AddGameObject({0,0,0},{1,2,1},GameObject::ObjectID::PLAYER,"nico-Trapper_512.png",MeshType::SPRITE);
+	auto&town{AddGameObject({0,0,0},{1,1,1},GameObject::ObjectID::DEFAULT,"Town1.png",MeshType::FLOOR)};
 	town.SetAutoScale({16,16});
 
 	AddLight({{4,0,10},WHITE});
@@ -135,7 +133,7 @@ void ShepGame::LoadMap(const std::string&filename){
 			for(const XMLTag&tag:zone.properties){
 				const auto&data{tag.data};
 				if(data.at("name")=="Building Type"){
-					AddGameObject({float(spawnCoords.x),0,float(spawnCoords.y)},{1,1,1},data.at("value")+".png",MeshType::OBJ);
+					AddGameObject({float(spawnCoords.x),0,float(spawnCoords.y)},{1,1,1},GameObject::ObjectID::DEFAULT,data.at("value")+".png",MeshType::OBJ);
 				}
 			}
 
@@ -218,6 +216,7 @@ bool ShepGame::OnUserUpdate(float fElapsedTime){
 	
 	for(GameObject&obj:objects){
 		Render3DModel(obj);
+		obj.Update(fElapsedTime);
 	}
 
 	if(GameSettings::LIGHTS_VISIBLE){

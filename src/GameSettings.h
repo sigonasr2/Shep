@@ -39,6 +39,8 @@ All rights reserved.
 
 class GameSettings{
 public:
-	inline static bool LIGHTS_VISIBLE{true};
-	inline static bool DEBUG_CAMERA{true};
+	inline static constexpr bool LIGHTS_VISIBLE{true};
+	inline static constexpr bool DEBUG_CAMERA{true};
+
+	inline static constexpr float playerSpd{5.f};
 };

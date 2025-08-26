@@ -354,6 +354,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AnimationState.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="src\GameObject.h">
       <SubType>
       </SubType>
@@ -377,6 +381,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClInclude>
     <ClInclude Include="src\olcPGEX_MiniAudio.h" />
     <ClInclude Include="src\olcPixelGameEngine.h" />
+    <ClInclude Include="src\olcUTIL_Animate2D.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="src\olcUTIL_Geometry2D.h" />
     <ClInclude Include="src\olcUTIL_Hardware3D.h" />
     <ClInclude Include="src\ShepGame.h">

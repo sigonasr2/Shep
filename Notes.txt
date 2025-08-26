@@ -38,3 +38,68 @@ Playtesting / Tweaks / Bugfixes
 
 
 Building 1: 8x6
+
+Battle Mechanics:
+Moves have a Color. When the Shep uses a move, their border shifts
+into the color of the move they just used.
+
+If a move hits an opponent of matching color, the damage is doubled.
+
+Each move has a "Recharge time". Using the move before the recharge time
+has finished makes it deal normal damage (%-based on full charge). 
+A move that is fully recharged deals 200% damage. Moves start with 1 charge.
+
+Moves that do apply status effects only work when fully charged.
+
+
+Capturing Mechanics:
+The lower the health of the Shep being attacked, the higher the chance of capture.
+From 5% at full health to 95% at lowest health.
+
+For legendaries the capturing rate is halved.
+
+For shinies the capturing rate is halved again.
+
+Chance of a legendary encounter is 1% (1/100)
+Each area has one legendary
+Chance of a shiny encounter is 0.5% (1/200)
+
+
+
+Hint Man
+Everytime the day/night cycle shifts (every 6 minutes) the hint man will move
+to one of a few predetermined spawn locations. If the player finds them they can
+ask for a hint to solving the puzzle (after first encountering it).
+
+First hint is free
+Second hint costs 100 geometry stars (GS)
+Every hint thereafter costs 200 GS
+
+Each time you are shown a picture of the puzzle with one more slot solved.
+When you go to solve it a faint overlay with the hint so far is shown.
+
+Each shape defeated awards you with some GS. Some NPCs will ask if you want to trade Sheps.
+Once traded, you are stuck with it, but may make it easier to unlock what you need.
+
+Each locked area is comprised of multiple Shep:
+First Area: 2 Shep
+Second Area: 3 Shep (2 from second area, 1 from first)
+Third Area: 4 Shep (3 from third area, 1 from second/first)
+Final Area: 6 Shep (4 from final area, 1 from third, 1 from second/first)
+
+In the final area, you will face legendary shep (6 in a row) at really high levels.
+Take them out or capture them and proceed to the higher tiers.
+
+
+
+Damage Formula:
+PWR = Move Base Power
+ATK = Shep Attack
+MAX(PWR+PWR*(ATK*0.01)-PWR*(DEF*0.01),1)
+
+
+Tackle		20	2
+Rush		30	2
+Flash Hit	20	3	Has priority
+Scratch		20	2
+Slash		40	3

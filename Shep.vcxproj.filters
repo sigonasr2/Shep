@@ -68,5 +68,11 @@
     <ClInclude Include="src\ObjectFlag.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\olcUTIL_Animate2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AnimationState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

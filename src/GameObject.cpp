@@ -36,12 +36,12 @@ All rights reserved.
 */
 #pragma endregion
 
-
 #include "ShepGame.h"
 #include "GameObject.h"
+#include "GameSettings.h"
 
-GameObject::GameObject(const vf3d&pos,const vf3d&scale,const std::string&spriteMeshName,const MeshType&type)
-		:pos(pos),scale(scale),spriteMeshName(spriteMeshName),type(type){};
+GameObject::GameObject(const vf3d&pos,const vf3d&scale,const ObjectID&id,const std::string&spriteMeshName,const MeshType&type)
+		:pos(pos),scale(scale),id(id),spriteMeshName(spriteMeshName),type(type){};
 
 const MeshType GameObject::GetMeshType()const{
 	return type;
@@ -82,4 +82,18 @@ void GameObject::SetAutoScale(const vf2d&unitDivision){
 	const vf2d imgSize{spr.Sprite()->Size()};
 	scale.x=imgSize.x/unitDivision.x;
 	scale.z=imgSize.y/unitDivision.y;
+}
+
+void GameObject::Update(const float&fElapsedTime){
+	if(anim)ShepGame::Game().animation.UpdateState(*anim,fElapsedTime);
+	auto&game{ShepGame::Game()};
+
+	switch(id){
+		case ObjectID::PLAYER:{
+			if(game.GetKey(Key::W).bHeld){pos.z-=fElapsedTime*GameSettings::playerSpd;}
+			if(game.GetKey(Key::A).bHeld){pos.x-=fElapsedTime*GameSettings::playerSpd;}
+			if(game.GetKey(Key::S).bHeld){pos.z+=fElapsedTime*GameSettings::playerSpd;}
+			if(game.GetKey(Key::D).bHeld){pos.x+=fElapsedTime*GameSettings::playerSpd;}
+		}break;
+	}
 }

@@ -38,10 +38,18 @@ All rights reserved.
 #pragma once
 
 #include "MeshType.h"
+#include "olcUTIL_Animate2D.h"
+#include "AnimationState.h"
 
 class GameObject{
 public:
-	GameObject(const vf3d&pos,const vf3d&scale,const std::string&spriteMeshName,const MeshType&type);
+	enum class ObjectID{
+		DEFAULT,
+		PLAYER,
+	};
+
+	GameObject(const vf3d&pos,const vf3d&scale,const ObjectID&id,const std::string&spriteMeshName,const MeshType&type);
+	void Update(const float&fElapsedTime);
 	const MeshType GetMeshType()const;
 	const hw3d::mesh&GetMesh()const;
 	const vf3d&GetPos()const;
@@ -51,6 +59,9 @@ public:
 private:
 	vf3d pos;
 	vf3d scale;
+	ObjectID id;
 	std::string spriteMeshName;
 	MeshType type;
+	AnimationState state;
+	std::optional<Animate2D::AnimationState>anim;
 };
