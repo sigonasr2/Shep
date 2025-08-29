@@ -43,6 +43,7 @@ All rights reserved.
 #include "util.h"
 #include "Light.h"
 #include "GameObject.h"
+#include "GameSettings.h"
 #include <set>
 
 class ShepGame : public olc::PixelGameEngine
@@ -58,6 +59,10 @@ public:
 	static ShepGame&Game();
 	void LoadMap(const std::string&filename);
 	std::unordered_map<AnimationState,Animate2D::FrameSequence>&GetCharacterAnimation(const uint8_t animInd,const SkinTone tone); //Provide the EXACT index of the character you want from the character images in gfx. NOTE: They are 1-indexed! Use 1 for the first one etc.
+
+	const bool GetInput(const Action&actionName);
+	const bool GetInputPressed(const Action&actionName);
+	const bool GetInputReleased(const Action&actionName);
 private:
 
 	static ShepGame*game;

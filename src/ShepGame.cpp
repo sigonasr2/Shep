@@ -3,6 +3,7 @@
 #include "TMXParser.h"
 #include "Theme.h"
 #include <ranges>
+#include "Dialog.h"
 
 ShepGame*ShepGame::game{nullptr};
 
@@ -259,10 +260,31 @@ bool ShepGame::OnUserUpdate(float fElapsedTime){
 			HW3D_DrawObject((matView*matWorld).m,nullptr,meshSpr.layout,meshSpr.pos,meshSpr.uv,lightCol);
 		}
 	}
-
-	Theme::DrawWindow({{20,20},{40,40}});
+	if(GetInputPressed(GameSettings::CONFIRM_DIALOG)&&!Dialog::Exists())
+		Dialog::Create("Hello World!\nThis is a test\nof three lines",
+			[](){
+		Dialog::Create("This is a second message!",{});});
+	if(Dialog::Exists())Dialog::UpdateAndDraw();
 
 	return true;
+}
+const bool ShepGame::GetInput(const Action&action){
+	for(const Key&a:action|std::views::filter([this](const Key&key){return GetKey(key).bHeld;})){
+		return true;
+	}
+	return false;
+}
+const bool ShepGame::GetInputPressed(const Action&action){
+	for(const Key&a:action|std::views::filter([this](const Key&key){return GetKey(key).bPressed;})){
+		return true;
+	}
+	return false;
+}
+const bool ShepGame::GetInputReleased(const Action&action){
+	for(const Key&a:action|std::views::filter([this](const Key&key){return GetKey(key).bReleased;})){
+		return true;
+	}
+	return false;
 }
 
 ShepGame&ShepGame::Game(){

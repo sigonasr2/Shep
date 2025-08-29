@@ -37,34 +37,25 @@ All rights reserved.
 #pragma endregion
 #pragma once
 
-#include "olcUTIL_Hardware3D.h"
-#include "olcPixelGameEngine.h"
+#include "Trigger.h"
+#include <string_view>
+#include <string>
+#include <memory>
+#include "GameSettings.h"
 
-using Action=std::vector<Key>;
-
-class GameSettings{
+class Dialog:public Trigger{
 public:
-	inline static constexpr bool LIGHTS_VISIBLE{true};
-	inline static constexpr bool DEBUG_CAMERA{true};
-
-	inline static constexpr float PLAYER_SPD{5.f};
-	inline static vf3d CAMERA_FOLLOW_POS{0,-3.77,-3.2};
-	inline static float CAMERA_TILT{51.35};
-
-	inline static float FRAME_TIME_PER_CHAR{1/30.f};
-	inline static Action CONFIRM_DIALOG{{Key::ENTER,Key::SPACE,Key::Z,Key::SHIFT,Key::RETURN}};
-
-	#define S inline static std::string_view
-	class Text{
-		S INTRO{"Welcome! You are about to begin a great journey of your own."};
-		S INTRO_2{"This land is inhabited by creatures called Shep! "
-			"Where they come from and their mysteries have yet to be discovered. Why are they here?"};
-		S INTRO_3{"Speaking of, what is your name?"};
-		S INTRO_4{"Your adventure is about to unfold, come by my lab when you are ready! I will see you there."};
-		S MOM_INTRO{"Oh {}! I know today is the big day, before you go I want to give you this!"};
-		S MOM_SHAPEDIA{"It's a Shapedia! As you explore it will keep track of your findings. I'm sure it will come in handy!"};
-		S MOM_OUTFIT{"Also are you sure you want to be in that outfit? It's a bit tacky..."};
-		S MOM_OUTFIT2{"Oh, you like your knight outfit that much don't you? I understand. Have fun today {}!"};
-	};
-	#undef S
+	static void Create(const std::string_view text,const std::function<void()>onComplete={});
+	static const bool Exists(); //If a dialog exists, use this function to trap other game inputs from occurring.
+	static const std::string GetText();
+	static const void AdvanceToEnd();
+	static void UpdateAndDraw();
+private:
+	Dialog();
+	static Dialog instance;
+	std::string text;
+	uint32_t cursor{};
+	float frameTime{GameSettings::FRAME_TIME_PER_CHAR};
+	bool isActive{false};
+	bool waitForReleaseKey{true};
 };

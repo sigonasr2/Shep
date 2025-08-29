@@ -141,6 +141,30 @@ copy_data/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\copy_data.dir\build.make CMakeFiles/copy_data.dir/build
 .PHONY : copy_data/fast
 
+src/Dialog.o: src/Dialog.cpp.o
+.PHONY : src/Dialog.o
+
+# target to build an object file
+src/Dialog.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Dialog.cpp.o
+.PHONY : src/Dialog.cpp.o
+
+src/Dialog.i: src/Dialog.cpp.i
+.PHONY : src/Dialog.i
+
+# target to preprocess a source file
+src/Dialog.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Dialog.cpp.i
+.PHONY : src/Dialog.cpp.i
+
+src/Dialog.s: src/Dialog.cpp.s
+.PHONY : src/Dialog.s
+
+# target to generate assembly for a file
+src/Dialog.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Dialog.cpp.s
+.PHONY : src/Dialog.cpp.s
+
 src/GameObject.o: src/GameObject.cpp.o
 .PHONY : src/GameObject.o
 
@@ -237,6 +261,30 @@ src/Theme.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Theme.cpp.s
 .PHONY : src/Theme.cpp.s
 
+src/Trigger.o: src/Trigger.cpp.o
+.PHONY : src/Trigger.o
+
+# target to build an object file
+src/Trigger.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Trigger.cpp.o
+.PHONY : src/Trigger.cpp.o
+
+src/Trigger.i: src/Trigger.cpp.i
+.PHONY : src/Trigger.i
+
+# target to preprocess a source file
+src/Trigger.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Trigger.cpp.i
+.PHONY : src/Trigger.cpp.i
+
+src/Trigger.s: src/Trigger.cpp.s
+.PHONY : src/Trigger.s
+
+# target to generate assembly for a file
+src/Trigger.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Shep.dir\build.make CMakeFiles/Shep.dir/src/Trigger.cpp.s
+.PHONY : src/Trigger.cpp.s
+
 src/olcPGEX_MiniAudio.o: src/olcPGEX_MiniAudio.cpp.o
 .PHONY : src/olcPGEX_MiniAudio.o
 
@@ -319,6 +367,9 @@ help:
 	@echo ... rebuild_cache
 	@echo ... copy_data
 	@echo ... Shep
+	@echo ... src/Dialog.o
+	@echo ... src/Dialog.i
+	@echo ... src/Dialog.s
 	@echo ... src/GameObject.o
 	@echo ... src/GameObject.i
 	@echo ... src/GameObject.s
@@ -331,6 +382,9 @@ help:
 	@echo ... src/Theme.o
 	@echo ... src/Theme.i
 	@echo ... src/Theme.s
+	@echo ... src/Trigger.o
+	@echo ... src/Trigger.i
+	@echo ... src/Trigger.s
 	@echo ... src/olcPGEX_MiniAudio.o
 	@echo ... src/olcPGEX_MiniAudio.i
 	@echo ... src/olcPGEX_MiniAudio.s

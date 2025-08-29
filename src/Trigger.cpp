@@ -35,36 +35,10 @@ Project (www.freetype.org). Please see LICENSE_FT.txt for more information.
 All rights reserved.
 */
 #pragma endregion
-#pragma once
 
-#include "olcUTIL_Hardware3D.h"
-#include "olcPixelGameEngine.h"
-
-using Action=std::vector<Key>;
-
-class GameSettings{
-public:
-	inline static constexpr bool LIGHTS_VISIBLE{true};
-	inline static constexpr bool DEBUG_CAMERA{true};
-
-	inline static constexpr float PLAYER_SPD{5.f};
-	inline static vf3d CAMERA_FOLLOW_POS{0,-3.77,-3.2};
-	inline static float CAMERA_TILT{51.35};
-
-	inline static float FRAME_TIME_PER_CHAR{1/30.f};
-	inline static Action CONFIRM_DIALOG{{Key::ENTER,Key::SPACE,Key::Z,Key::SHIFT,Key::RETURN}};
-
-	#define S inline static std::string_view
-	class Text{
-		S INTRO{"Welcome! You are about to begin a great journey of your own."};
-		S INTRO_2{"This land is inhabited by creatures called Shep! "
-			"Where they come from and their mysteries have yet to be discovered. Why are they here?"};
-		S INTRO_3{"Speaking of, what is your name?"};
-		S INTRO_4{"Your adventure is about to unfold, come by my lab when you are ready! I will see you there."};
-		S MOM_INTRO{"Oh {}! I know today is the big day, before you go I want to give you this!"};
-		S MOM_SHAPEDIA{"It's a Shapedia! As you explore it will keep track of your findings. I'm sure it will come in handy!"};
-		S MOM_OUTFIT{"Also are you sure you want to be in that outfit? It's a bit tacky..."};
-		S MOM_OUTFIT2{"Oh, you like your knight outfit that much don't you? I understand. Have fun today {}!"};
-	};
-	#undef S
-};
+#include "Trigger.h"
+Trigger::Trigger(const std::function<void()>&trigger)
+	:triggerFunc(trigger){}
+void Trigger::trigger(){
+	triggerFunc();
+}

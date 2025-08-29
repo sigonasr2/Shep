@@ -86,7 +86,7 @@
 0,0,0,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,1025,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="4" name="Object Layer 1" visible="0">
+ <objectgroup id="4" name="Object Layer 1">
   <object id="1" type="Building" x="64" y="48" width="128" height="96">
    <properties>
     <property name="Building Type" propertytype="Buildings" value="building1"/>

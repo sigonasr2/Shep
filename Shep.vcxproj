@@ -345,6 +345,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Dialog.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="src\GameObject.cpp">
       <SubType>
       </SubType>
@@ -360,10 +364,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="src\Trigger.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimationState.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="src\Dialog.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -405,6 +417,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       </SubType>
     </ClInclude>
     <ClInclude Include="src\TMXParser.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="src\Trigger.h">
       <SubType>
       </SubType>
     </ClInclude>
