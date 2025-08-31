@@ -131,6 +131,26 @@ void ShepGame::LoadMap(const std::string&filename){
 			if(tiles[y][x]!=0)collisionTiles.emplace(x,y);
 		}
 	}
+	for(const XMLTag&tag:map.GetData().TilesetData){
+		const std::string tilesetName{tag.data.at("source")};
+		const uint32_t firstgid{uint32_t(tag.GetInteger("firstgid"))};
+		for(const auto&[tileID,tilesetFilenamePair]:GameSettings::TILE_MODELS){
+			if(tilesetFilenamePair.first==tilesetName){
+				const GameSettings::TileID newTileID{tileID+firstgid};
+				GameSettings::CONVERTED_TILE_MODELS[newTileID]=tilesetFilenamePair.second;
+			}
+		}
+	}
+	for(const LayerTag&layer:map.GetData().GetLayers()){
+		std::vector<std::vector<int32_t>>tiles{layer.tiles};
+		for(int y:std::ranges::iota_view(size_t(0),tiles.size())){
+			for(int x:std::ranges::iota_view(size_t(0),tiles[0].size())){
+				if(GameSettings::CONVERTED_TILE_MODELS.count(tiles[y][x])){
+					AddGameObject({float(x),0.f,float(y)},{2,2,2},GameObject::ObjectID::DEFAULT,GameSettings::CONVERTED_TILE_MODELS[tiles[y][x]],MeshType::SPRITE);
+				}
+			}
+		}
+	}
 	if(map.GetData().ZoneData.count("Building")>0){
 		const std::vector<ZoneData>&zones{map.GetData().ZoneData.at("Building")};
 		for(const ZoneData&zone:zones){

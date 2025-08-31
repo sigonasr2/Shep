@@ -48,8 +48,8 @@ public:
 	inline static constexpr bool DEBUG_CAMERA{true};
 
 	inline static constexpr float PLAYER_SPD{5.f};
-	inline static vf3d CAMERA_FOLLOW_POS{0,-3.77,-3.2};
-	inline static float CAMERA_TILT{51.35};
+	inline static vf3d CAMERA_FOLLOW_POS{0,-3.29,-2.5};
+	inline static float CAMERA_TILT{54.54};
 
 	inline static float FRAME_TIME_PER_CHAR{1/30.f};
 	inline static Action CONFIRM_DIALOG{{Key::ENTER,Key::SPACE,Key::Z,Key::SHIFT,Key::RETURN}};
@@ -67,4 +67,16 @@ public:
 		S MOM_OUTFIT2{"Oh, you like your knight outfit that much don't you? I understand. Have fun today {}!"};
 	};
 	#undef S
+
+	using TileID=uint32_t;
+	using TileSetFilenamePair=std::pair<std::string,std::string>;
+	using GraphicFilename=std::string;
+
+	inline static const std::unordered_map<TileID,TileSetFilenamePair>TILE_MODELS{
+		{296,{"Field Tiles.tsx","tree.png"}},
+		{321,{"Field Tiles.tsx","tree.png"}},
+		{319,{"Field Tiles.tsx","tree.png"}},
+		{344,{"Field Tiles.tsx","tree.png"}},
+	};
+	inline static std::unordered_map<TileID,GraphicFilename>CONVERTED_TILE_MODELS;
 };

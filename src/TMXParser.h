@@ -50,10 +50,10 @@ struct XMLTag{
     const std::string FormatTagData(std::map<std::string,std::string>tiles);
     friend std::ostream& operator << (std::ostream& os, XMLTag& rhs);
     std::string str();
-    int GetInteger(std::string dataTag);
-    float GetFloat(std::string dataTag);
-    double GetDouble(std::string dataTag);
-    bool GetBool(std::string dataTag);
+    int GetInteger(std::string dataTag)const;
+    float GetFloat(std::string dataTag)const;
+    double GetDouble(std::string dataTag)const;
+    bool GetBool(std::string dataTag)const;
     std::string GetString(std::string dataTag)const;
 };
 
@@ -102,7 +102,6 @@ private:
     MapTag MapData;
     std::string name;
     Renderable*optimizedTile=nullptr;
-    std::vector<XMLTag> TilesetData;
     std::vector<LayerTag> LayerData;
     std::string mapType="";
     std::set<std::string>spawns;
@@ -125,6 +124,7 @@ public:
     friend std::ostream& operator << (std::ostream& os, std::vector<XMLTag>& rhs);
     const std::string&GetBGM()const;
     std::map<std::string,std::vector<::ZoneData>>ZoneData;
+    std::vector<XMLTag> TilesetData;
 };
 
 struct Property{
@@ -175,20 +175,20 @@ class TMXParser{
             "(width:"<<rhs.width<<", height:"<<rhs.height<<", Tile width:"<<rhs.tilewidth<<", Tile height:"<<rhs.tileheight<<",playerSpawnLocation:"<<rhs.playerSpawnLocation<<")\n";
         return os;
     }
-    int XMLTag::GetInteger(std::string dataTag) {
-        return std::stoi(data[dataTag]);
+    int XMLTag::GetInteger(std::string dataTag)const{
+        return std::stoi(data.at(dataTag));
     }
-    float XMLTag::GetFloat(std::string dataTag) {
-        return std::stof(data[dataTag]);
+    float XMLTag::GetFloat(std::string dataTag)const{
+        return std::stof(data.at(dataTag));
     }
-    double XMLTag::GetDouble(std::string dataTag) {
-        return std::stod(data[dataTag]);
+    double XMLTag::GetDouble(std::string dataTag)const{
+        return std::stod(data.at(dataTag));
     }
     std::string XMLTag::GetString(std::string dataTag)const{
         return data.at(dataTag);
     }
-    bool XMLTag::GetBool(std::string dataTag) {
-        if (data[dataTag]=="0"||data[dataTag]=="false") {
+    bool XMLTag::GetBool(std::string dataTag)const{
+        if (data.at(dataTag)=="0"||data.at(dataTag)=="false") {
             return false;
         }else{
             return true;
