@@ -50,32 +50,72 @@ void Dialog::Create(const std::string_view text,const std::function<void()>onCom
 	instance.isActive=true;
 	instance.text=std::string(text);
 	instance.cursor=0;
+	instance.tempText={};
+	instance.lastWord={};
+	instance.displayText={};
+	instance.lastWordMarker=0;
 	instance.waitForReleaseKey=true;
+	instance.advanceToEnd=false;
+	instance.displayLines=1;
 	instance.Trigger::Trigger([onComplete](){instance.isActive=false;if(onComplete)onComplete();});
 }
 void Dialog::UpdateAndDraw(){
 	auto&game{ShepGame::Game()};
 	const bool CursorAtEnd=instance.cursor==instance.text.length();
-	if(CursorAtEnd&&!instance.waitForReleaseKey&&game.GetInputPressed(GameSettings::CONFIRM_DIALOG))instance.trigger();
+	if(CursorAtEnd&&!instance.waitForReleaseKey&&game.GetInputPressed(GameSettings::CONFIRM_DIALOG)){
+		if(instance.displayLines>MAX_DISPLAY_LINES)Create(instance.storedText,instance.triggerFunc);
+		else instance.trigger();
+	}
 		
 	if(instance.waitForReleaseKey&&!game.GetInput(GameSettings::CONFIRM_DIALOG))instance.waitForReleaseKey=false;
 	if(!CursorAtEnd&&!instance.waitForReleaseKey&&game.GetInputPressed(GameSettings::CONFIRM_DIALOG)){
-		instance.cursor=instance.text.length();
+		instance.advanceToEnd=true;
 		instance.waitForReleaseKey=true;
 	}
 
 	instance.frameTime-=game.GetElapsedTime();
-	if(instance.frameTime<=0.f){
-		instance.frameTime=GameSettings::FRAME_TIME_PER_CHAR;
-		instance.cursor=std::min(instance.text.length(),size_t(instance.cursor+1));
-	}
 
 	const vi2d WINDOW_UPPER_LEFT{int(game.GetScreenSize().x*1/6.f),int(game.GetScreenSize().y-192-16)};
 	const vi2d WINDOW_SIZE{int(game.GetScreenSize().x*2/3.f),192};
 	const geom2d::rect<int>WINDOW{WINDOW_UPPER_LEFT,WINDOW_SIZE};
 	Theme::DrawWindow(WINDOW);
-	std::string displayText{GetText()};
-	game.DrawStringPropDecal(WINDOW_UPPER_LEFT+vi2d{8,0},displayText,WHITE,{4.f,4.f});
+
+	const vf2d FONT_SIZE{4.f,4.f};
+
+	
+	while((instance.frameTime<=0.f||instance.advanceToEnd)&&instance.cursor<int(instance.text.length())){
+		std::string tempText=instance.displayText;
+		tempText+=instance.text[instance.cursor];
+		
+		auto WrapText=[&](std::string&tempText,std::string&text,std::string&displayText,int&lastWordMarker,std::string&lastWord){
+			vf2d maxSize=WINDOW_SIZE;
+			if(game.GetTextSizeProp(tempText).x*FONT_SIZE.x>=maxSize.x){
+				displayText=displayText.substr(0,lastWordMarker-1);
+				displayText+='\n';
+				displayText+=lastWord;
+				instance.displayLines++;
+			}
+			if(text[instance.cursor]==' '||text[instance.cursor]=='\n'){
+				lastWord="";
+				lastWordMarker=instance.cursor+1;
+				if(text[instance.cursor]=='\n')instance.displayLines++;
+			} else {
+				lastWord+=text[instance.cursor];
+			}
+			if(instance.displayLines>MAX_DISPLAY_LINES){
+				instance.storedText=text.substr(lastWordMarker);
+				instance.cursor=instance.text.length()-1;
+				return;
+			}
+			displayText+=text[instance.cursor];
+ 		};
+		WrapText(tempText,instance.text,instance.displayText,instance.lastWordMarker,instance.lastWord);
+		instance.cursor++;
+		instance.frameTime=GameSettings::FRAME_TIME_PER_CHAR;
+	}
+
+
+	game.DrawStringPropDecal(WINDOW_UPPER_LEFT+vi2d{8,0},instance.displayText,WHITE,FONT_SIZE);
 }
 const bool Dialog::Exists(){
 	return instance.isActive;

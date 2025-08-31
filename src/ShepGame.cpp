@@ -263,7 +263,7 @@ bool ShepGame::OnUserUpdate(float fElapsedTime){
 	if(GetInputPressed(GameSettings::CONFIRM_DIALOG)&&!Dialog::Exists())
 		Dialog::Create("Hello World!\nThis is a test\nof three lines",
 			[](){
-		Dialog::Create("This is a second message!",{});});
+		Dialog::Create("This is a second message! But we are making this very long which should allow us to see if this works or not. More stuff to say without breaking the dialog box.",{});});
 	if(Dialog::Exists())Dialog::UpdateAndDraw();
 
 	return true;

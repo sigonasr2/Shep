@@ -43,6 +43,6 @@ class Trigger{
 public:
 	Trigger(const std::function<void()>&trigger);
 	void trigger();
-private:
+protected:
 	std::function<void()>triggerFunc;
 };

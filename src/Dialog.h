@@ -54,6 +54,14 @@ private:
 	Dialog();
 	static Dialog instance;
 	std::string text;
+	std::string tempText;
+	std::string lastWord;
+	std::string displayText;
+	std::string storedText;
+	int displayLines{1};
+	static const int MAX_DISPLAY_LINES{3};
+	int lastWordMarker;
+	bool advanceToEnd{false};
 	uint32_t cursor{};
 	float frameTime{GameSettings::FRAME_TIME_PER_CHAR};
 	bool isActive{false};
