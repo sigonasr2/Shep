@@ -114,6 +114,8 @@ bool ShepGame::OnUserCreate(){
 	HW3D_EnableDepthTest(true);
 	HW3D_SetCullMode(olc::CullMode::CCW);
 
+	EnableLayer(CreateLayer(),true);
+
 	return true;
 }
 
@@ -231,7 +233,9 @@ bool ShepGame::OnUserUpdate(float fElapsedTime){
 	ClearBuffer(olc::BLANK, true);
 
 	for(const GameObject&obj:objects|std::views::filter([](const GameObject&obj){return obj.GetID()==GameObject::ObjectID::PLAYER;})){
-		pos=GameSettings::CAMERA_FOLLOW_POS-obj.GetPos();
+		vf3d targetPos{GameSettings::CAMERA_FOLLOW_POS-obj.GetPos()};
+		vf3d playerDiff{targetPos-pos};
+		pos+=playerDiff*fElapsedTime*GameSettings::CAMERA_FOLLOW_SPD;
 	}
 		
 	const std::vector<std::reference_wrapper<utils::hw3d::mesh>>meshes{
@@ -320,18 +324,24 @@ const bool ShepGame::GetInputReleased(const Action&action){
 }
 
 void ShepGame::GetAdjustedMovePos(const GameObject&obj,vf2d&movePos){
+	game->SetLayerScale(0U,{0.05,0.05});
+	game->SetDrawTarget(nullptr);
+	game->Clear(BLANK);
 	for(const auto&collisionObj:game->objects){ 
 		if(&obj==&collisionObj
 			||collisionObj.GetMeshType()==MeshType::FLOOR
 			||collisionObj.GetMeshType()==MeshType::OBJ)continue;
 		const auto&objRadius{obj.GetScale().x};
 
-		geom2d::rect<float>collisionRect{collisionObj.GetPos().xz(),collisionObj.GetScale().xz()/2};
-		geom2d::rect<float>projRect{collisionObj.GetPos().xz()-vf2d{objRadius,objRadius}*2,collisionObj.GetScale().xz()/2+vf2d{objRadius,objRadius}*4};
+		geom2d::circle<float>collisionCirc{collisionObj.GetPos().xz()+collisionObj.GetScale().x/4,collisionObj.GetScale().x/16};
+		geom2d::circle<float>projCirc{collisionObj.GetPos().xz()+collisionObj.GetScale().x/4,collisionObj.GetScale().x/16+0.001f};
 		geom2d::circle<float>circ{obj.GetPos().xz(),objRadius};
-		if(geom2d::contains(collisionRect,circ)||geom2d::overlaps(collisionRect,circ)){
-			const auto&projCircle{geom2d::project(circ,projRect,geom2d::ray<float>{projRect.middle(),circ.pos-projRect.middle()})};
+		if(geom2d::contains(collisionCirc,circ)||geom2d::overlaps(collisionCirc,circ)){
+			game->DrawCircle(collisionCirc.pos,collisionCirc.radius);
+			game->DrawCircle(circ.pos,circ.radius,GREEN);
+			const auto&projCircle{geom2d::project(circ,projCirc,geom2d::ray<float>{collisionCirc.pos,circ.pos-collisionCirc.pos})};
 			if(projCircle){
+				game->DrawCircle(*projCircle,circ.radius,RED);
 				movePos=*projCircle;
 			}else{
 				std::cout<<"WARNING! Something went terribly wrong trying to project a collision! THIS SHOULD NOT BE HAPPENING!"<<std::endl;
@@ -339,6 +349,7 @@ void ShepGame::GetAdjustedMovePos(const GameObject&obj,vf2d&movePos){
 			}
 		}
 	}
+	game->SetDrawTarget(1U);
 }
 
 ShepGame&ShepGame::Game(){

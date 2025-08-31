@@ -49,6 +49,7 @@ public:
 
 	inline static constexpr float PLAYER_SPD{5.f};
 	inline static vf3d CAMERA_FOLLOW_POS{0,-3.29,-2.5};
+	inline static float CAMERA_FOLLOW_SPD{8.f};
 	inline static float CAMERA_TILT{54.54};
 
 	inline static float FRAME_TIME_PER_CHAR{1/30.f};
