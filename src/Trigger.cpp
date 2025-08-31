@@ -39,6 +39,9 @@ All rights reserved.
 #include "Trigger.h"
 Trigger::Trigger(const std::function<void()>&trigger)
 	:triggerFunc(trigger){}
+void Trigger::SetTrigger(const std::function<void()>&trigger){
+	triggerFunc=trigger;
+}
 void Trigger::trigger(){
 	triggerFunc();
 }

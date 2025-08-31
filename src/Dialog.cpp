@@ -57,7 +57,7 @@ void Dialog::Create(const std::string_view text,const std::function<void()>onCom
 	instance.waitForReleaseKey=true;
 	instance.advanceToEnd=false;
 	instance.displayLines=1;
-	instance.Trigger::Trigger([onComplete](){instance.isActive=false;if(onComplete)onComplete();});
+	instance.SetTrigger([onComplete](){instance.isActive=false;if(onComplete)onComplete();});
 }
 void Dialog::UpdateAndDraw(){
 	auto&game{ShepGame::Game()};

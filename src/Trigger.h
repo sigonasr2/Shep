@@ -44,5 +44,6 @@ public:
 	Trigger(const std::function<void()>&trigger);
 	void trigger();
 protected:
+	void SetTrigger(const std::function<void()>&trigger);
 	std::function<void()>triggerFunc;
 };
