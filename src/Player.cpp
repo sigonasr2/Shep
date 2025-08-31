@@ -42,19 +42,31 @@ All rights reserved.
 void GameObject::Player::Update(GameObject&self,const float&fElapsedTime){
 	ShepGame&game{ShepGame::Game()};
 	if(game.GetKey(Key::W).bHeld){
-		self.pos.z-=fElapsedTime*GameSettings::PLAYER_SPD;
+		vf2d moveToCoord{self.pos.xz()+vf2d{0.f,-fElapsedTime*GameSettings::PLAYER_SPD}};
+		ShepGame::GetAdjustedMovePos(self,moveToCoord);
+		self.pos.x=moveToCoord.x;
+		self.pos.z=moveToCoord.y;
 		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::WALK_N);
 	}
 	if(game.GetKey(Key::A).bHeld){
-		self.pos.x-=fElapsedTime*GameSettings::PLAYER_SPD;
+		vf2d moveToCoord{self.pos.xz()+vf2d{-fElapsedTime*GameSettings::PLAYER_SPD,0.f}};
+		ShepGame::GetAdjustedMovePos(self,moveToCoord);
+		self.pos.x=moveToCoord.x;
+		self.pos.z=moveToCoord.y;
 		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::WALK_W);
 	}
 	if(game.GetKey(Key::S).bHeld){
-		self.pos.z+=fElapsedTime*GameSettings::PLAYER_SPD;
+		vf2d moveToCoord{self.pos.xz()+vf2d{0.f,fElapsedTime*GameSettings::PLAYER_SPD}};
+		ShepGame::GetAdjustedMovePos(self,moveToCoord);
+		self.pos.x=moveToCoord.x;
+		self.pos.z=moveToCoord.y;
 		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::WALK_S);
 	}
 	if(game.GetKey(Key::D).bHeld){
-		self.pos.x+=fElapsedTime*GameSettings::PLAYER_SPD;
+		vf2d moveToCoord{self.pos.xz()+vf2d{fElapsedTime*GameSettings::PLAYER_SPD,0.f}};
+		ShepGame::GetAdjustedMovePos(self,moveToCoord);
+		self.pos.x=moveToCoord.x;
+		self.pos.z=moveToCoord.y;
 		if(self.anim)self.animState.ChangeState(*self.anim,AnimationState::WALK_E);
 	}
 	if(game.GetKey(Key::W).bReleased){

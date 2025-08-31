@@ -40,6 +40,20 @@
                 "building1"
             ],
             "valuesAsFlags": false
+        },
+        {
+            "color": "#ffff55ff",
+            "drawFill": true,
+            "id": 3,
+            "members": [
+            ],
+            "name": "PlayerSpawn",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
         }
     ]
 }

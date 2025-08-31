@@ -63,6 +63,8 @@ public:
 	const bool GetInput(const Action&actionName);
 	const bool GetInputPressed(const Action&actionName);
 	const bool GetInputReleased(const Action&actionName);
+
+	static void GetAdjustedMovePos(const GameObject&obj,vf2d&movePos);
 private:
 
 	static ShepGame*game;

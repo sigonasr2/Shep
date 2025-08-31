@@ -105,9 +105,6 @@ bool ShepGame::OnUserCreate(){
 
 	LoadMap("Town1.tmx");
 
-	auto&player{AddGameObject({0,0,0},{1,2,1},GameObject::ObjectID::PLAYER,"nico-trapper.png",MeshType::SPRITE)};
-	player.ApplyCharacterAnimation(29,SkinTone::TONE_2);
-
 	AddGameObject({9,0,10},{1,2,1},GameObject::ObjectID::DEFAULT,"nico-trapper.png",MeshType::SPRITE).ApplyCharacterAnimation(32,SkinTone::TONE_3);
 
 	AddLight({{4,0,10},WHITE});
@@ -124,6 +121,10 @@ void ShepGame::LoadMap(const std::string&filename){
 	collisionTiles.clear();
 	objects.clear();
 	lights.clear();
+
+	auto&player{AddGameObject({0,0,0},{1,2,1},GameObject::ObjectID::PLAYER,"nico-trapper.png",MeshType::SPRITE)};
+	player.ApplyCharacterAnimation(29,SkinTone::TONE_2);
+
 	TMXParser map{"assets/maps/"+filename};
 	std::vector<std::vector<int32_t>>tiles{map.GetData().GetLayers()[map.GetData().GetLayers().size()-1].tiles};
 	for(int y:std::ranges::iota_view(size_t(0),tiles.size())){
@@ -148,6 +149,15 @@ void ShepGame::LoadMap(const std::string&filename){
 				if(GameSettings::CONVERTED_TILE_MODELS.count(tiles[y][x])){
 					AddGameObject({float(x),0.f,float(y)},{2,2,2},GameObject::ObjectID::DEFAULT,GameSettings::CONVERTED_TILE_MODELS[tiles[y][x]],MeshType::SPRITE);
 				}
+			}
+		}
+	}
+	if(map.GetData().ZoneData.count("PlayerSpawn")>0){
+		const std::vector<ZoneData>&zones{map.GetData().ZoneData.at("PlayerSpawn")};
+		for(const ZoneData&zone:zones){
+			geom2d::rect<int>spawnZone{zone.zone};
+			for(GameObject&obj:objects|std::views::filter([](const GameObject&obj){return obj.GetID()==GameObject::ObjectID::PLAYER;})){
+				obj.SetPos(spawnZone.pos/map.GetData().GetMapData().TileSize);
 			}
 		}
 	}
@@ -201,6 +211,8 @@ void ShepGame::LoadAnimations(){
 }
 
 bool ShepGame::OnUserUpdate(float fElapsedTime){
+	fElapsedTime=std::min(0.1f,fElapsedTime);
+
 	using namespace olc;
 	
 	if(GameSettings::DEBUG_CAMERA){
@@ -307,6 +319,28 @@ const bool ShepGame::GetInputReleased(const Action&action){
 	return false;
 }
 
+void ShepGame::GetAdjustedMovePos(const GameObject&obj,vf2d&movePos){
+	for(const auto&collisionObj:game->objects){ 
+		if(&obj==&collisionObj
+			||collisionObj.GetMeshType()==MeshType::FLOOR
+			||collisionObj.GetMeshType()==MeshType::OBJ)continue;
+		const auto&objRadius{obj.GetScale().x};
+
+		geom2d::rect<float>collisionRect{collisionObj.GetPos().xz(),collisionObj.GetScale().xz()/2};
+		geom2d::rect<float>projRect{collisionObj.GetPos().xz()-vf2d{objRadius,objRadius}*2,collisionObj.GetScale().xz()/2+vf2d{objRadius,objRadius}*4};
+		geom2d::circle<float>circ{obj.GetPos().xz(),objRadius};
+		if(geom2d::contains(collisionRect,circ)||geom2d::overlaps(collisionRect,circ)){
+			const auto&projCircle{geom2d::project(circ,projRect,geom2d::ray<float>{projRect.middle(),circ.pos-projRect.middle()})};
+			if(projCircle){
+				movePos=*projCircle;
+			}else{
+				std::cout<<"WARNING! Something went terribly wrong trying to project a collision! THIS SHOULD NOT BE HAPPENING!"<<std::endl;
+				throw;
+			}
+		}
+	}
+}
+
 ShepGame&ShepGame::Game(){
 	if(game==nullptr){
 		std::cout<<"WARNING! Trying to reference Game pointer before game has been initialized! THIS IS NOT ALLOWED!"<<std::endl;;
@@ -322,3 +356,4 @@ int main()
 		shep.Start();
 	return 0;
 }
+

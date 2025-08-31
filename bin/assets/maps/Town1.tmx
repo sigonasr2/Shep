@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="41" height="37" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="2">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="41" height="37" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="4">
  <tileset firstgid="1" source="Village.tsx"/>
  <tileset firstgid="1025" source="Collision.tsx"/>
  <tileset firstgid="1026" source="Field Tiles.tsx"/>
@@ -208,11 +208,14 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="4" name="Object Layer 1" visible="0">
+ <objectgroup id="4" name="Object Layer 1">
   <object id="1" type="Building" x="160" y="128" width="128" height="96">
    <properties>
     <property name="Building Type" propertytype="Buildings" value="building1"/>
    </properties>
+  </object>
+  <object id="2" name="Player Spawn" type="PlayerSpawn" x="220" y="248">
+   <point/>
   </object>
  </objectgroup>
 </map>

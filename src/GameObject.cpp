@@ -39,6 +39,7 @@ All rights reserved.
 #include "ShepGame.h"
 #include "GameObject.h"
 #include "GameSettings.h"
+#include <ranges>
 
 GameObject::GameObject(const vf3d&pos,const vf3d&scale,const ObjectID&id,const std::string&spriteMeshName,const MeshType&type)
 		:pos(pos),scale(scale),id(id),spriteMeshName(spriteMeshName),type(type){};
@@ -134,4 +135,9 @@ void GameObject::ApplyCharacterAnimation(const uint8_t animInd,const SkinTone to
 		animState.AddState(state,animations.at(state));
 	}
 	anim=Animate2D::AnimationState{};
+}
+
+void GameObject::SetPos(const vf2d&pos){
+	this->pos.x=pos.x;
+	this->pos.z=pos.y;
 }

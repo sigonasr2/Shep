@@ -59,6 +59,7 @@ public:
 	const Renderable&GetSprite()const;
 	void SetAutoScale(const vf2d&unitDivision); //Takes the texture width/height and divides it by unitDivion then scales the Game Object accordingly. Useful for scaling tilemaps.
 	void ApplyCharacterAnimation(const uint8_t animInd,const SkinTone tone);
+	void SetPos(const vf2d&pos);
 
 	struct Player{
 		static void Update(GameObject&self,const float&fElapsedTime);
